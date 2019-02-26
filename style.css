@@ -69,6 +69,7 @@
     border: 1.5px solid palevioletred;
     border-radius: 2em;
     padding: .25em .75em;
+    min-width: 40px;
     cursor: pointer;
     transition-duration: 0.2s;
     outline: 0;
