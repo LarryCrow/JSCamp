@@ -19,6 +19,7 @@
     padding: 0.5em 0.75em;
     border-bottom: 2px solid palevioletred;
     font-size: 1.5rem;
+    font-style: normal;
 }
 
 .form {
@@ -69,7 +70,7 @@
     border: 1.5px solid palevioletred;
     border-radius: 2em;
     padding: .25em .75em;
-    min-width: 40px;
+    min-width: 100px;
     cursor: pointer;
     transition-duration: 0.2s;
     outline: 0;
