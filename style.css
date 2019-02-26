@@ -71,19 +71,15 @@
     padding: .25em .75em;
     cursor: pointer;
     transition-duration: 0.2s;
+    outline: 0;
 }
 
-.form_submit_button:hover {
+.form_submit_button:hover,
+.form_submit_button:focus {
     background: rgb(216, 112, 147);
     color: white;
 }
 
-.form_submit_button:focus {
-    outline: 0;
-    background: rgba(216, 112, 147, 0.5);
-    color: rgb(80, 80, 80);
-}
-
-.form_submit_button:checked {
-    background: green;
+.form_submit_button:active {
+    filter: brightness(120%);
 }
