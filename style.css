@@ -55,14 +55,18 @@
     background: inherit;
 }
 
+.input {
+    margin-top: 10px;
+}
+
 .input:focus {
     box-shadow: 0 3px palevioletred;
     outline: 0;
 }
 
-.item_title {
+/* .item_title {
     padding-bottom: 10px;
-}
+} */
 
 .form_submit_button {
     margin-top: 10px;

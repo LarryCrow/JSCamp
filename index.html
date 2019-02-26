@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+<html>
 
 <head>
   <title>Add car</title>
@@ -9,68 +10,59 @@
 
 <body>
   <div class="form_wrapper">
-    <p class="form_title">Add new car</p>
+    <h1 class="form_title">Add new car</h1>
     <form action="https://backend-jscamp.saritasa-hosting.com/api/cars" method="POST" class="form">
       <fieldset class="form_fieldset">
         <div class="form_item">
           <label>
-            <p class="item_title">Brand</p>
-            <select name="make_id" class="input item_select">
-              <option value="1">Brand 1</option>
-              <option value="2">Brand 2</option>
-            </select>
+            <span class="item_title">Brand</p>
+              <select required name="make_id" class="input item_select">
+                <option disabled value="" selected></option>
+                <option value="1">Brand 1</option>
+                <option value="2">Brand 2</option>
+              </select>
           </label>
         </div>
         <div class="form_item">
           <label class="form_item">
-            <p class="item_title">Model</p>
-            <select name="car_model_id" class="input item_select">
-              <option value="1">Model 1</option>
-              <option value="2">Model 2</option>
-            </select>
+            <span class="item_title">Model</p>
+              <select required name="car_model_id" class="input item_select">
+                <option disabled value="" selected></option>
+                <option value="1">Model 1</option>
+                <option value="2">Model 2</option>
+              </select>
           </label>
         </div>
         <div class="form_item">
           <label class="form_item">
-            <p class="item_title">Body type</p>
-            <select name="body_type_id" class="input item_select">
-              <option value="1">Type 1</option>
-              <option value="2">Type 2</option>
-            </select>
+            <span class="item_title">Body type</p>
+              <select required name="body_type_id" class="input item_select">
+                <option disabled value="" selected></option>
+                <option value="1">Type 1</option>
+                <option value="2">Type 2</option>
+              </select>
           </label>
         </div>
       </fieldset>
       <fieldset class="form_fieldset">
         <div class="form_item">
           <label class="form_item">
-            <p class="item_title">Created at</p>
-            <input name="created_at" type="date" class="input item_datepicker" required>
-          </label>
-        </div>
-        <div class="form_item">
-          <label class="form_item">
-            <p class="item_title">Updated at</p>
-            <input name="updated_at" type="date" class="input item_datepicker" required>
-          </label>
-        </div>
-        <div class="form_item">
-            <label class="form_item">
-              <p class="item_title">Year</p>
+            <span class="item_title">Year</p>
               <input name="year" type="text" class="input item_datepicker" required>
-            </label>
-          </div>
+          </label>
+        </div>
         <div class="form_item">
-            <label class="form_item">
-              <p class="item_title">Mileage</p>
+          <label class="form_item">
+            <span class="item_title">Mileage</p>
               <input name="mileage" type="number" class="input item_text" required>
-            </label>
-          </div>
+          </label>
+        </div>
       </fieldset>
       <fieldset class="form_fieldset">
         <div class="form_item">
           <label class="form_item">
-            <p class="item_title">description</p>
-            <textarea name="description" class="input item_textfield" required></textarea>
+            <span class="item_title">Description</p>
+              <textarea name="description" class="input item_textfield" required></textarea>
           </label>
         </div>
         <button class="form_submit_button" type="submit">Add</button>
@@ -78,3 +70,5 @@
     </form>
   </div>
 </body>
+
+</html>
