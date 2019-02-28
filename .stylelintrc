@@ -1,0 +1,5 @@
+{
+  "extends": "@saritasa/stylelint-config-react",
+  "rules": {}
+}
+

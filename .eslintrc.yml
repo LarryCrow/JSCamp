@@ -1,0 +1,3 @@
+extends: 
+  - "@saritasa/eslint-config-base"
+

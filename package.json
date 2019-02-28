@@ -1,0 +1,33 @@
+{
+  "name": "bitkovskidmitri",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint -c ./.eslintrc.yml \"./**/*.js\" && stylelint \"./**/*.css\"",
+    "lint:fix": "eslint -c ./.eslintrc.yml \"./**/*.js\" --fix && stylelint \"./**/*.css\" --fix"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.saritasa.com:saritasa/js/jscamp/bitkovskidmitri.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@saritasa/eslint-config-base": "^1.0.0",
+    "@saritasa/stylelint-config-order": "0.0.3",
+    "@saritasa/stylelint-config-react": "^1.0.0",
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.14.1",
+    "eslint-config-prettier": "^4.1.0",
+    "eslint-plugin-eslint-comments": "^3.1.1",
+    "eslint-plugin-import": "^2.16.0",
+    "eslint-plugin-jsdoc": "^4.1.1",
+    "eslint-plugin-prettier": "^3.0.1",
+    "prettier": "^1.16.4",
+    "stylelint": "^9.10.1",
+    "stylelint-declaration-use-variable": "^1.7.0",
+    "stylelint-no-unsupported-browser-features": "^3.0.2"
+  }
+}

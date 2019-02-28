@@ -1,89 +1,89 @@
 * {
-    margin: 0;
-    padding: 0;
-    font-family: 'Fira Sans', sans-serif;
-    box-sizing:border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Fira Sans', sans-serif;
+  box-sizing:border-box;
 }
 
 .form_wrapper {
-    box-sizing: border-box;
-    width: 40%;
-    min-width: 600px;
-    max-width: 1100px;
-    margin: 15vh auto 0 auto;
-    border: 2px solid  palevioletred;
-    color: rgb(80, 80, 80);
+  box-sizing: border-box;
+  width: 40%;
+  min-width: 600px;
+  max-width: 1100px;
+  margin: 15vh auto 0 auto;
+  border: 2px solid  palevioletred;
+  color: rgb(80, 80, 80);
 }
 
 .form_title {
-    padding: 0.5em 0.75em;
-    border-bottom: 2px solid palevioletred;
-    font-size: 1.5rem;
-    font-style: normal;
+  padding: 0.5em 0.75em;
+  border-bottom: 2px solid palevioletred;
+  font-size: 1.5rem;
+  font-style: normal;
 }
 
 .form {
-    padding: 1em 0.75em;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
+  padding: 1em 0.75em;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .form_column {
-    border: none;
-    width: 45%;
+  border: none;
+  width: 45%;
 }
 
 .form_column:last-child {
-    padding-top: 2em;
-    width: 60%;
+  padding-top: 2em;
+  width: 60%;
 }
 
 .form_item {
-    display: block;
+  display: block;
 }
 
 .form_item:not(:first-child) {
-    padding-top: 2em;
+  padding-top: 2em;
 }
 
 .form_item:hover .item_title{
-    color: black;
+  color: black;
 }
 
 .form_column .input {
-    width: 100%;
-    box-sizing: border-box;
-    border: none;
-    border-bottom: 1px solid rgb(220, 220, 220);
-    background: inherit;
-    margin-top: 10px;
+  width: 100%;
+  box-sizing: border-box;
+  border: none;
+  border-bottom: 1px solid rgb(220, 220, 220);
+  background: inherit;
+  margin-top: 10px;
 }
 
 .input:focus {
-    box-shadow: 0 3px palevioletred;
-    outline: 0;
+  box-shadow: 0 3px palevioletred;
+  outline: 0;
 }
 
 .form_submit_button {
-    margin-top: 10px;
-    background: inherit;
-    border: 1.5px solid palevioletred;
-    padding: .25em .75em;
-    min-width: 100px;
-    cursor: pointer;
-    transition-duration: 0.2s;
-    outline: 0;
-    position: relative;
+  margin-top: 10px;
+  background: inherit;
+  border: 1.5px solid palevioletred;
+  padding: .25em .75em;
+  min-width: 100px;
+  cursor: pointer;
+  transition-duration: 0.2s;
+  outline: 0;
+  position: relative;
 }
 
 .form_submit_button:hover,
 .form_submit_button:focus {
-    background: palevioletred;
-    color: rgb(245, 245, 245);
+  background: palevioletred;
+  color: rgb(245, 245, 245);
 }
 
 
 .form_submit_button:active {
-    filter: brightness(120%);
+  filter: brightness(120%);
 }
