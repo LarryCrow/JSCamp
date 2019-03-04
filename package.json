@@ -29,5 +29,8 @@
     "stylelint": "^9.10.1",
     "stylelint-declaration-use-variable": "^1.7.0",
     "stylelint-no-unsupported-browser-features": "^3.0.2"
+  },
+  "dependencies": {
+    "moment": "^2.24.0"
   }
 }
