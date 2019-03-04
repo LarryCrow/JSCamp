@@ -171,30 +171,30 @@ function getCars(pageNumber) {
   );
 }
 
-/**
- * Call function for saving cars after adding or edit.
- */
-function addCar() {
-  const form = document.querySelector('.saving-form');
-  const formData = new FormData(form);
-  saveCar(formData).then(
-    () => {
-      console.log('Succesful');
-    },
-    error => {
-      console.log(error);
-    },
-  );
-}
+// /**
+//  * Call function for saving cars after adding or edit.
+//  */
+// function addCar() {
+//   const form = document.querySelector('.saving-form');
+//   const formData = new FormData(form);
+//   saveCar(formData).then(
+//     () => {
+//       console.log('Succesful');
+//     },
+//     error => {
+//       console.log(error);
+//     },
+//   );
+// }
 
-/**
- * Show or hide sidebar.
- */
-function changeSideBarState() {
-  const sidebar = document.querySelector('.form-wrapper-sidebar');
+// /**
+//  * Show or hide sidebar.
+//  */
+// function changeSideBarState() {
+//   const sidebar = document.querySelector('.form-wrapper-sidebar');
 
-  sidebar.classList.toggle('inactive-filters');
-}
+//   sidebar.classList.toggle('inactive-filters');
+// }
 
 /**
  * Switch page in paginator.
@@ -267,14 +267,14 @@ function sortCars(event) {
 }
 
 function initEventListeners() {
-  const saveBtn = document.querySelector('.save-button');
-  saveBtn.addEventListener('click', addCar);
+  // const saveBtn = document.querySelector('.save-button');
+  // saveBtn.addEventListener('click', addCar);
 
   const searchingBtn = document.querySelector('.searching-button');
   searchingBtn.addEventListener('click', getCars);
 
-  const sidebarBtn = document.querySelector('.sidebar-state-button');
-  sidebarBtn.addEventListener('click', changeSideBarState);
+  // const sidebarBtn = document.querySelector('.sidebar-state-button');
+  // sidebarBtn.addEventListener('click', changeSideBarState);
 
   const paginator = document.querySelector('.paginator');
   paginator.addEventListener('click', switchPage);
