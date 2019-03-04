@@ -1,4 +1,5 @@
 export * from './cars-service.js';
+import { checkXSS } from './utilities.js';
 
 const URL = 'https://backend-jscamp.saritasa-hosting.com';
 
@@ -63,10 +64,11 @@ export function addCar(formData) {
         if (key !== 'description') {
           object[key] = parseInt(value);
         } else {
-          object[key] = value;
+          object[key] = checkXSS(value);
         }
     });
     const json = JSON.stringify(object);
+    json['description'] = checkXSS(json['description']);
 
     xhr.onload = xhr.onerror = function() {
       if (this.status === 200) {
@@ -98,7 +100,7 @@ export function editCar(formData, id) {
         if (key !== 'description') {
           object[key] = parseInt(value);
         } else {
-          object[key] = value;
+          object[key] = checkXSS(value);
         }
     });
     const json = JSON.stringify(object);
