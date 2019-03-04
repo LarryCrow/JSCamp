@@ -17,7 +17,7 @@ function getSelectedCar() {
         form.elements['body_type_id'].value = result.body_type_id;
         form.elements['year'].value = result.year;
         form.elements['mileage'].value = result.mileage;
-        form.elements['description'].value = result.description;
+        form.elements['description'].value = checkXSS(result.description);
       },
       error => {
         console.log(error);
