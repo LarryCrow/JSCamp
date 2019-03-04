@@ -1,4 +1,5 @@
 import { getCar, editCar, getMakeModels, getMakes, getBodyTypes } from "./cars-service.js";
+import { showErrorModal } from "./utilities.js";
 
 let CAR_ID;
 
@@ -89,4 +90,3 @@ function initEventListener() {
 
 initEventListener();
 initializeSelectLists();
-// showMessage();
