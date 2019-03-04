@@ -50,6 +50,8 @@ function saveCar() {
   }
 }
 
+
+// TODO add other func(getModels, getCar)
 async function initializeSelectLists() {
   const makesSelect = document.querySelector('[name="make_id"]');
   const bodiesSelect = document.querySelector('[name="body_type_id"]');
