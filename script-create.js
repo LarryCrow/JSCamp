@@ -1,4 +1,4 @@
-import { getCar, editCar, getMakeModels, getMakes, getBodyTypes } from "./cars-service.js";
+import { getCar, editCar, getMakeModels, getMakes, getBodyTypes, addCar } from "./cars-service.js";
 import { showErrorModal } from "./utilities.js";
 
 let CAR_ID;
@@ -7,39 +7,47 @@ function getSelectedCar() {
   const urlString = document.URL;
   const url = new URLSearchParams(urlString.split('?')[1]);
   CAR_ID = url.get('car');
-  if (CAR_ID == null) {
-    document.location.href = "file:///home/dmitri/bitkovskidmitri/table.html";
-    return;
+  if (CAR_ID !== null) {
+    getCar(CAR_ID).then(
+      result => {
+        const form = document.querySelector('.form');
+        result = JSON.parse(result);
+        form.elements['make_id'].value = result.make_id;
+        form.elements['car_model_id'].value = getMakeModelsAfterChange(result.make_id);
+        form.elements['body_type_id'].value = result.body_type_id;
+        form.elements['year'].value = result.year;
+        form.elements['mileage'].value = result.mileage;
+        form.elements['description'].value = result.description;
+      },
+      error => {
+        console.log(error);
+      }
+    );
   }
-  getCar(CAR_ID).then(
-    result => {
-      const form = document.querySelector('.form');
-      result = JSON.parse(result);
-      form.elements['make_id'].value = result.make_id;
-      form.elements['car_model_id'].value = getMakeModelsAfterChange(result.make_id);
-      form.elements['body_type_id'].value = result.body_type_id;
-      form.elements['year'].value = result.year;
-      form.elements['mileage'].value = result.mileage;
-      form.elements['description'].value = result.description;
-    },
-    error => {
-      console.log(error);
-    }
-  );
-
 }
 
 function saveCar() {
   const form = document.querySelector('.form');
   const formData = new FormData(form);
-  editCar(formData, CAR_ID).then(
-    () => {
-      console.log('Succesful');
-    },
-    error => {
-      console.log(error);
-    },
-  );
+  if (!CAR_ID) {
+    addCar(formData).then(
+      () => {
+        console.log('Succesful');
+      },
+      error => {
+        showErrorModal(error);
+      }
+    );
+  } else {
+    editCar(formData, CAR_ID).then(
+      () => {
+        console.log('Succesful');
+      },
+      error => {
+        console.log(error);
+      },
+    );
+  }
 }
 
 async function initializeSelectLists() {
@@ -67,6 +75,8 @@ async function initializeSelectLists() {
 
 function getMakeModelsAfterChange(make_id) {
   const modelsSelect = document.querySelector('[name="car_model_id"]');
+  if (!make_id) return;
+  if (make_id.target) make_id = make_id.target.value;
   getMakeModels(make_id).then(
     result => {
       result = JSON.parse(result);
@@ -86,6 +96,9 @@ function getMakeModelsAfterChange(make_id) {
 function initEventListener() {
   const editBtn = document.querySelector('.save-button');
   editBtn.addEventListener('click', saveCar);
+
+  const makeSelect = document.querySelector('[name="make_id"');
+  makeSelect.addEventListener('change', getMakeModelsAfterChange);
 }
 
 initEventListener();
