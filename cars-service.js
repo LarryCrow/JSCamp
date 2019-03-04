@@ -54,7 +54,7 @@ function createURL(params) {
  * @param {Form} form Form with data for saving.
  * @returns {Promise} Return object with saved car.
  */
-export function saveCar(formData) {
+export function addCar(formData) {
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
 
@@ -78,7 +78,7 @@ export function saveCar(formData) {
 
     xhr.open('POST', `${URL}/api/cars`, true);
     xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(formData);
+    xhr.send(json);
   });
 }
 

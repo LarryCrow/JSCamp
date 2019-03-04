@@ -142,7 +142,7 @@ function fillTable(rows) {
   } else {
     tablePageCount = 0;
     currentPage = 0;
-    showErrorMessage('No results. Please, change filters values');
+    showErrorModal('No results. Please, change filters values');
   }
   changePaginatorPages();
 }
@@ -171,21 +171,12 @@ function getCars(pageNumber) {
   );
 }
 
-// /**
-//  * Call function for saving cars after adding or edit.
-//  */
-// function addCar() {
-//   const form = document.querySelector('.saving-form');
-//   const formData = new FormData(form);
-//   saveCar(formData).then(
-//     () => {
-//       console.log('Succesful');
-//     },
-//     error => {
-//       console.log(error);
-//     },
-//   );
-// }
+/**
+ * Call function for saving cars after adding or edit.
+ */
+function addCar() {
+  document.location.href = `create.html`;
+}
 
 // /**
 //  * Show or hide sidebar.
@@ -241,7 +232,7 @@ function selectCar(event) {
 
 function moveCarToEdit() {
   const carID = selectedRow.dataset['carId'];
-  document.location.href = `edit.html?car=${carID}`;
+  document.location.href = `create.html?car=${carID}`;
 }
 
 function sortCars(event) {
@@ -267,8 +258,8 @@ function sortCars(event) {
 }
 
 function initEventListeners() {
-  // const saveBtn = document.querySelector('.save-button');
-  // saveBtn.addEventListener('click', addCar);
+  const saveBtn = document.querySelector('.add');
+  saveBtn.addEventListener('click', addCar);
 
   const searchingBtn = document.querySelector('.searching-button');
   searchingBtn.addEventListener('click', getCars);
