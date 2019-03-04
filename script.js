@@ -1,3 +1,6 @@
+import { getAllCars } from "./cars-service.js";
+import { showErrorModal } from "./utilities.js";
+
 let tablePageCount = 0;
 let currentPage = 0;
 let selectedRow;
@@ -163,7 +166,7 @@ function getCars(pageNumber) {
       fillTable(JSON.parse(result));
     },
     error => {
-      // showErrorMessage();
+      console.log(error);
     },
   );
 }
@@ -238,7 +241,7 @@ function selectCar(event) {
 
 function moveCarToEdit() {
   const carID = selectedRow.dataset['carId'];
-  document.location.href = `file:///home/dmitri/bitkovskidmitri/edit.html?car=${carID}`;
+  document.location.href = `edit.html?car=${carID}`;
 }
 
 function sortCars(event) {

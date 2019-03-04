@@ -34,6 +34,11 @@ export function getAllCars({pageNumber, keyword, sortField, orderType}) {
   });
 }
 
+/**
+ * Helping function to create params string for GET query
+ * @param {Object} params Object is used for construction
+ * @return {String} string view ' ' or '?a=parA' or '?a=parA&b=parB....'
+ */
 function createURL(params) {
   let str = [];
   for (let p in params)
