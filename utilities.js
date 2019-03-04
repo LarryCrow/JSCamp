@@ -28,3 +28,9 @@ export function showErrorModal(message = 'An unexpected error occured, sorry') {
     backdrop.appendChild(messageBlock);
     document.body.appendChild(backdrop);
 }
+
+export function checkXSS(str) {
+    const regex = /<script>\S*<\/script>/
+    const newString = str.replace(regex, "");
+    return newString.replace(/\s+/g, ' ').trim()
+}

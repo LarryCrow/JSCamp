@@ -1,5 +1,5 @@
 import { getCar, editCar, getMakeModels, getMakes, getBodyTypes, addCar } from "./cars-service.js";
-import { showErrorModal } from "./utilities.js";
+import { showErrorModal, checkXSS } from "./utilities.js";
 
 let CAR_ID;
 
@@ -58,7 +58,7 @@ async function initializeSelectLists() {
   for (let i = 0; i < makes_array.results.length; i++) {
     const option = document.createElement('option');
     option.value = makes_array.results[i].id;
-    option.innerText = makes_array.results[i].name;
+    option.innerText = checkXSS(makes_array.results[i].name);
     makesSelect.appendChild(option);
   }
 
@@ -66,7 +66,7 @@ async function initializeSelectLists() {
   for (let i = 0; i < bodies_array.results.length; i++) {
     const option = document.createElement('option');
     option.value = bodies_array.results[i].id;
-    option.innerText = bodies_array.results[i].name;
+    option.innerText = checkXSS(bodies_array.results[i].name);
     bodiesSelect.appendChild(option);
   }
 
@@ -83,7 +83,7 @@ function getMakeModelsAfterChange(make_id) {
       for (let i = 0; i < result.results.length; i++) {
         const option = document.createElement('option');
         option.value = result.results[i].id;
-        option.innerText = result.results[i].name;
+        option.innerText = checkXSS(result.results[i].name);
         modelsSelect.appendChild(option);
       }
     },

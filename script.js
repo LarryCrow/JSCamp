@@ -1,5 +1,5 @@
 import { getAllCars } from "./cars-service.js";
-import { showErrorModal } from "./utilities.js";
+import { showErrorModal, checkXSS } from "./utilities.js";
 
 let tablePageCount = 0;
 let currentPage = 0;
@@ -102,9 +102,9 @@ function getTableRow(car) {
   for (let i = 0; i < 7; i++) {
     tdArray.push(document.createElement('td'));
   }
-  tdArray[0].innerText = car.make.name;
-  tdArray[1].innerText = car.car_model.name;
-  tdArray[2].innerText = car.body_type.name;
+  tdArray[0].innerText = checkXSS(car.make.name);
+  tdArray[1].innerText = checkXSS(car.car_model.name);
+  tdArray[2].innerText = checkXSS(car.body_type.name);
   tdArray[3].innerText = car.year;
   tdArray[4].innerText = car.mileage;
   tdArray[5].innerText = car.created_at;
