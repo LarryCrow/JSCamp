@@ -107,8 +107,8 @@ function getTableRow(car) {
   tdArray[2].innerText = checkXSS(car.body_type.name);
   tdArray[3].innerText = car.year;
   tdArray[4].innerText = car.mileage;
-  tdArray[5].innerText = car.created_at;
-  tdArray[6].innerText = car.updated_at;
+  tdArray[5].innerText = moment(car.created_at,"YYYY-MM-DD HH:mm:ss").format("DD.MM.YYYY");
+  tdArray[6].innerText = moment(car.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD.MM.YYYY");
 
   const tr = document.createElement('tr');
 
