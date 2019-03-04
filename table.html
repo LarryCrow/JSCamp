@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Showing cars</title>
+  <link href="table-styles.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css"
+    integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+</head>
+
+<body>
+  <div class='page-wrapper'>
+    <div class='form-wrapper-sidebar'>
+      <form class='saving-form'>
+        <label class="form_item">
+          <span class="item_title">Brand</span>
+          <select required name="make_id" class="input item_select">
+            <option value="" selected disabled></option>
+            <option value="1">Brand 1</option>
+            <option value="2">Brand 2</option>
+          </select>
+        </label>
+        <label class="form_item">
+          <span class="item_title">Model</span>
+          <select required name="car_model_id" class="input item_select">
+            <option value="" selected disabled></option>
+            <option value="1">Model 1</option>
+            <option value="2">Model 2</option>
+          </select>
+        </label>
+        <label class="form_item">
+          <span class="item_title">Body type</span>
+          <select required name="body_type_id" class="input item_select">
+            <option value="" selected disabled></option>
+            <option value="1">Type 1</option>
+            <option value="2">Type 2</option>
+          </select>
+        </label>
+        <label class="form_item">
+          <span class="item_title">Year</span>
+          <input required name="year" type="text" class="input item_datepicker">
+        </label>
+        <label class="form_item">
+          <span class="item_title">Mileage</span>
+          <input required name="mileage" type="number" class="input item_text">
+        </label>
+        <label class="form_item">
+          <span class="item_title">Description</span>
+          <textarea required name="description" class="input item_textfield" required></textarea>
+        </label>
+        <button class="save-button" type="button"> Save </button>
+      </form>
+    </div>
+    <div class='result-table'>
+      <button class='icons sidebar-state-button'>
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="table-wrapper">
+        <div class="table-options">
+          <div class="toolbar">
+            <button class='icons edit' type="button">
+              <i class="fas fa-pen"></i>
+            </button>
+            <button class='icons delete' type="button">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+          <div class="searching-field">
+            <input class="searching-input" type="text">
+            <button class='searching-button' type="button">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+          <ul class="paginator">
+            <li class="paginator-item" name="to-first"><i class="fas fa-angle-double-left"></i></li>
+            <li class="paginator-item hidden"></li>
+            <li class="paginator-item hidden"></li>
+            <li class="paginator-item hidden"></li>
+            <li class="paginator-item" name="to-last"><i class="fas fa-angle-double-right"></i></li>
+          </ul>
+        </div>
+        <table class="cars" data-sort-name = "" data-sort-order = "">
+          <thead>
+            <tr>
+              <th data-name = "make_id">
+                <span>Brand</span>
+                <div class="sorting">
+                  <p class="sort-ascending"></p>
+                  <p class="sort-descending"></i></p>
+                </div>
+              </th>
+              <th data-name = "car_model_id">
+                <span>Model</span> 
+                <div class="sorting">
+                  <p class="sort-ascending"></p>
+                  <p class="sort-descending"></p>
+                </div>
+              </th>
+              <th data-name = "body_type_id">
+                <span>Body type</span>
+                <div class="sorting">
+                  <p class="sort-ascending"></p>
+                  <p class="sort-descending"></p>
+                </div>
+              </th>
+              <th data-name = "year">
+                <span>Year</span>
+                <div class="sorting">
+                  <p class="sort-ascending"></p>
+                  <p class="sort-descending"></p>
+                </div>
+              </th>
+              <th data-name = "mileage">
+                <span>Mileage</span>
+                <div class="sorting">
+                  <p class="sort-ascending"></p>
+                  <p class="sort-descending"></p>
+                </div>
+              </th>
+              <th data-name = "created-at">
+                <span>Created at</span>
+                <div class="sorting">
+                  <p class="sort-ascending"></p>
+                  <p class="sort-descending"></p>
+                </div>
+              </th>
+              <th data-name = "updated-at">
+                <span>Updated at</span>
+                <div class="sorting">
+                  <p class="sort-ascending"></p>
+                  <p class="sort-descending"></p>
+                </div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Rows are generated via js -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <script src="cars-service.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>

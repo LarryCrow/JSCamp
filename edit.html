@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>Add car</title>
+  <link href="edit-styles.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Fira+Sans" rel="stylesheet">
+</head>
+
+<body>
+    <a href="table.html" class="returning-button" type="button">Back to table</a>
+    <div class="form-wrapper">
+      <h1 class="form-title">Add new car</h1>
+      <form class="form">
+        <div class="form-column">
+          <label class="form-item">
+              <span class="item-title">Brand</span>
+              <select required name="make_id" class="input item-select">
+                <option disabled value="" selected></option>
+              </select>
+          </label>
+          <label class="form-item">
+            <span class="item-title">Model</span>
+              <select required name="car_model_id" class="input item-select">
+                <option disabled value="" selected></option>
+              </select>
+          </label>
+          <label class="form-item">
+            <span class="item-title">Body type</span>
+              <select required name="body_type_id" class="input item-select">
+                <option disabled value="" selected></option>
+              </select>
+          </label>
+        </div>
+        <div class="form-column">
+          <label class="form-item">
+            <span class="item-title">Year</span>
+              <input name="year" type="text" class="input item-datepicker" required>
+          </label>
+          <label class="form-item">
+            <span class="item-title">Mileage</span>
+              <input name="mileage" type="number" class="input item-text" required>
+          </label>
+        </div>
+        <div class="form-column">
+          <label class="form-item">
+            <span class="item-title">Description</span>
+              <textarea name="description" class="input item-textfield" required></textarea>
+          </label>
+          <button class="save-button" type="button">Save</button>
+        </div>
+      </form>
+    </div>
+    <script type="module" src="script-edit.js"></script>
+  </body>
+  
+
+</html>

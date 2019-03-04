@@ -5,7 +5,7 @@
   box-sizing:border-box;
 }
 
-.form_wrapper {
+.form-wrapper {
   box-sizing: border-box;
   width: 40%;
   min-width: 600px;
@@ -15,7 +15,7 @@
   color: rgb(80, 80, 80);
 }
 
-.form_title {
+.form-title {
   padding: 0.5em 0.75em;
   border-bottom: 2px solid palevioletred;
   font-size: 1.5rem;
@@ -29,29 +29,29 @@
   justify-content: space-between;
 }
 
-.form_column {
+.form-column {
   border: none;
   width: 45%;
 }
 
-.form_column:last-child {
+.form-column:last-child {
   padding-top: 2em;
   width: 60%;
 }
 
-.form_item {
+.form-item {
   display: block;
 }
 
-.form_item:not(:first-child) {
+.form-item:not(:first-child) {
   padding-top: 2em;
 }
 
-.form_item:hover .item_title{
+.form-item:hover .item-title{
   color: black;
 }
 
-.form_column .input {
+.form-column .input {
   width: 100%;
   box-sizing: border-box;
   border: none;
@@ -65,7 +65,7 @@
   outline: 0;
 }
 
-.form_submit_button {
+.save-button {
   margin-top: 10px;
   background: inherit;
   border: 1.5px solid palevioletred;
@@ -77,13 +77,21 @@
   position: relative;
 }
 
-.form_submit_button:hover,
-.form_submit_button:focus {
+.save-button:hover,
+.save-button:focus {
   background: palevioletred;
   color: rgb(245, 245, 245);
 }
 
 
-.form_submit_button:active {
+.save-button:active {
   filter: brightness(120%);
+}
+
+.returning-button {
+  display: block;
+  position: absolute;
+  left: 15px;
+  top: 15px;
+  color: rgb(140, 140, 140);
 }
