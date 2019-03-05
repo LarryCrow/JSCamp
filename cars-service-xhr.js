@@ -1,4 +1,4 @@
-export * from './cars-service.js';
+export * from './cars-service-xhr.js';
 import { checkXSS } from './utilities.js';
 
 const URL = 'https://backend-jscamp.saritasa-hosting.com';
@@ -8,7 +8,7 @@ const URL = 'https://backend-jscamp.saritasa-hosting.com';
  *
  * @param {string} pageNumber Number of a needed page.
  * @param {string} keyword Filter for query on server.
- * @returns {Promise} Returns object { results: [], pagination: {}} with found cars and info about their amount,
+ * @returns {Object} Returns object { results: [], pagination: {}} with found cars and info about their amount,
  *                    also total pages for displaying.
  */
 export function getAllCars({pageNumber, keyword, sortField, orderType}) {
@@ -32,6 +32,16 @@ export function getAllCars({pageNumber, keyword, sortField, orderType}) {
 
     xhr.open('GET', `${URL}/api/cars${page === '' ? '' : `?${page}`}`, true);
     xhr.send();
+  })
+  .then( response => {
+    return JSON.parse(response);
+  })
+  .catch( error => {
+    if (error === 503) {
+      return getAllCars({pageNumber, keyword, sortField, orderType})
+    } else {
+      throw new Error('Page doesn\'t exist.');
+    }
   });
 }
 
@@ -73,13 +83,23 @@ export function addCar(formData) {
       if (this.status === 200) {
         res(this.response);
       } else {
-        rej(this.status);
+        rej(this);
       }
     };
 
     xhr.open('POST', `${URL}/api/cars`, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(json);
+  })
+  .then( response => {
+    return JSON.parse(response);
+  })
+  .catch( error => {
+    if (error.status === 503) {
+      return addCar(formData)
+    } else {
+      throw new Error('Page doesn\'t exist.');
+    }
   });
 }
 
@@ -108,13 +128,23 @@ export function editCar(formData, id) {
       if (this.status === 200) {
         res(this.response);
       } else {
-        rej(this.status);
+        rej(this);
       }
     };
 
     xhr.open('PUT', `${URL}/api/cars/${id}`, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(json);
+  })
+  .then( response => {
+    return JSON.parse(response);
+  })
+  .catch( error => {
+    if (error.status === 503) {
+      return editCar(formData, id);
+    } else {
+      throw new Error('Some error');
+    }
   });
 }
 
@@ -132,6 +162,16 @@ export function deleteCar(id) {
 
     xhr.open('DELETE', `${URL}/api/cars/${id}`, true);
     xhr.send();
+  })
+  .then( response => {
+    return 'Successful';
+  })
+  .catch( error => {
+    if (error.status === 503) {
+      return deleteCar(id)
+    } else {
+      throw new Error('Some error');
+    }
   });
 }
 
@@ -149,12 +189,22 @@ export function getCar(car_id) {
       if (this.status === 200) {
         res(this.response);
       } else {
-        rej(this.status);
+        rej(this);
       }
     }
 
     xhr.open('GET', `${URL}/api/cars/${car_id}`, true);
     xhr.send();
+  })
+  .then( response => {
+    return JSON.parse(response);
+  })
+  .catch( error => {
+    if (error.status === 503) {
+      return getCar(car_id);
+    } else {
+      throw new Error('Some error');
+    }
   });
 }
 
@@ -166,12 +216,22 @@ export function getMakes() {
       if (this.status === 200) {
         res(this.response);
       } else {
-        rej(this.status);
+        rej(this);
       }
     }
 
     xhr.open('GET', `${URL}/api/dictionaries/makes`, true);
     xhr.send();
+  })
+  .then( response => {
+    return JSON.parse(response);
+  })
+  .catch( error => {
+    if (error.status === 503) {
+      return getMakes();
+    } else {
+      throw new Error('Some error');
+    }
   });
 }
 
@@ -183,12 +243,22 @@ export function getMakeModels(makes_id){
       if (this.status === 200) {
         res(this.response);
       } else {
-        rej(this.status);
+        rej(this);
       }
     }
 
     xhr.open('GET', `${URL}/api/dictionaries/makes/${makes_id}/models`, true);
     xhr.send();
+  })
+  .then( response => {
+    return JSON.parse(response);
+  })
+  .catch( error => {
+    if (error.status === 503) {
+      return getMakeModels(makes_id);
+    } else {
+      throw new Error('Some error ?');
+    }
   });
 }
 
@@ -200,11 +270,21 @@ export function getBodyTypes() {
       if (this.status === 200) {
         res(this.response);
       } else {
-        rej(this.status);
+        rej(this);
       }
     }
 
     xhr.open('GET', `${URL}/api/dictionaries/body-types`, true);
     xhr.send();
+  })
+  .then( response => {
+    return JSON.parse(response);
+  })
+  .catch( error => {
+    if (error.status === 503) {
+      return getBodyTypes();
+    } else {
+      throw new Error('Some error');
+    }
   });
 }

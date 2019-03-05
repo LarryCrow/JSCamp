@@ -1,9 +1,15 @@
-import { getAllCars, deleteCar } from "./cars-service.js";
+import { getAllCars, deleteCar } from "./cars-service-xhr.js";
 import { showErrorModal, checkXSS } from "./utilities.js";
 
-let tablePageCount = 0;
-let currentPage = 0;
-let selectedRow;
+
+const STORAGE = {
+  'pageToMove': 0,
+  'currentPage': 0,
+  'tablePageCount': 0,
+  'selectedRow': null,
+  'sortField': '',
+  'orderType': ''
+}
 
 /**
  * Helping function for replacement displaying text into paginator's page.
@@ -31,17 +37,17 @@ function changePaginationItems(prev, cur, next) {
 function changePaginatorPages() {
   const parent = document.querySelector('.paginator');
 
-  if (tablePageCount !== 0) {
+  if (STORAGE.tablePageCount !== 0) {
     parent.firstElementChild.classList.remove('disabled-button');
     parent.lastElementChild.classList.remove('disabled-button');
-    if (tablePageCount === 1) {
-      changePaginationItems('...', currentPage, '...');
-    } else if (currentPage === 1) {
-      changePaginationItems('...', currentPage, currentPage + 1);
-    } else if (currentPage === tablePageCount) {
-      changePaginationItems(currentPage - 1, currentPage, '...');
+    if (STORAGE.tablePageCount === 1) {
+      changePaginationItems('...', STORAGE.currentPage, '...');
+    } else if (STORAGE.currentPage === 1) {
+      changePaginationItems('...', STORAGE.currentPage, STORAGE.currentPage + 1);
+    } else if (STORAGE.currentPage === STORAGE.tablePageCount) {
+      changePaginationItems(STORAGE.currentPage - 1, STORAGE.currentPage, '...');
     } else {
-      changePaginationItems(currentPage - 1, currentPage, currentPage + 1);
+      changePaginationItems(STORAGE.currentPage - 1, STORAGE.currentPage, STORAGE.currentPage + 1);
     }
   } else {
     for (let i = 0; i < parent.children.length; i++) {
@@ -103,14 +109,14 @@ function fillTable(rows) {
   }
 
   if (rows.results && rows.results.length !== 0) {
-    tablePageCount = rows.pagination.total_pages;
-    currentPage = rows.pagination.current_page;
+    STORAGE.tablePageCount = rows.pagination.total_pages;
+    STORAGE.currentPage = rows.pagination.current_page;
     rows.results.forEach(row => {
       tbody.appendChild(getTableRow(row));
     });
   } else {
-    tablePageCount = 0;
-    currentPage = 0;
+    STORAGE.tablePageCount = 0;
+    STORAGE.currentPage = 0;
     showErrorModal('No results. Please, change filters values');
   }
   const toolbarBtns = document.querySelectorAll(".icons:not(.add)");
@@ -125,30 +131,21 @@ function fillTable(rows) {
  *
  * @param {string} pageNumber Number of needed page.
  */
-function getCars(pageNumber) {
+async function searchCars(pageNumber) {
   const table = document.querySelector('.cars');
   const param = {
-    'pageNumber': Number.isFinite(pageNumber) ? pageNumber : undefined,
+    'pageNumber': Number.isFinite(pageNumber) ? pageNumber : '',
     'keyword': document.querySelector('.searching-input').value,
-    'sortField': table.dataset.sortName,
-    'orderType': table.dataset.sortOrder
+    'sortField': STORAGE.sortField,
+    'orderType': STORAGE.orderType
   }
 
-  getAllCars(param).then(
-    result => {
-      fillTable(JSON.parse(result));
-    },
-    error => {
-      console.log(error);
-    },
-  );
-}
-
-/**
- * Call function for saving cars after adding or edit.
- */
-function addCar() {
-  document.location.href = `create.html`;
+  try {
+    const cars = await getAllCars(param);
+    fillTable(cars);
+  } catch (ex) {
+    showErrorModal(ex);
+  } 
 }
 
 // /**
@@ -166,7 +163,7 @@ function addCar() {
  * @param {MouseEvent} event Event received by clicking on the paginator.
  */
 function switchPage(event) {
-  if (tablePageCount === 0) {
+  if (STORAGE.tablePageCount === 0) {
     return;
   }
 
@@ -175,91 +172,87 @@ function switchPage(event) {
 
   if (!target.previousElementSibling) {
     // to first
-    if (currentPage !== 1) page = 1;
+    if (STORAGE.currentPage !== 1) page = 1;
     else return;
   } else if (!target.nextElementSibling) {
     // to last
-    if (currentPage !== tablePageCount) page = tablePageCount;
+    if (STORAGE.currentPage !== STORAGE.tablePageCount) page = STORAGE.tablePageCount;
     else return;
   } else {
     page = parseInt(target.innerText, 10);
-    if (page === currentPage || !page) return;
+    if (page === STORAGE.currentPage || !page) return;
   }
-  getCars(page);
+  searchCars(page);
 }
 
 function selectCar(event) {
   const toolbarBtns = document.querySelectorAll(".icons:not(.add)");
-  if (selectedRow) {
-    selectedRow.classList.remove('selected-row');
-    if (selectedRow.dataset['carId'] !== event.target.parentElement.dataset['carId']) {
-      selectedRow = event.target.parentElement;
-      selectedRow.classList.add('selected-row');
+  if (STORAGE.STORAGE.selectedRow) {
+    STORAGE.selectedRow.classList.remove('selected-row');
+    if (STORAGE.selectedRow.dataset['carId'] !== event.target.parentElement.dataset['carId']) {
+      STORAGE.selectedRow = event.target.parentElement;
+      STORAGE.selectedRow.classList.add('selected-row');
       for (let btn of toolbarBtns) {
         btn.classList.remove('disabled-button');
       }
     } else {
-      selectedRow = null;
+      STORAGE.selectedRow = null;
       for (let btn of toolbarBtns) {
         btn.classList.add('disabled-button');
       }
     }
   } else {
-    selectedRow = event.target.parentElement;
-    selectedRow.classList.add('selected-row');
+    STORAGE.selectedRow = event.target.parentElement;
+    STORAGE.selectedRow.classList.add('selected-row');
     for (let btn of toolbarBtns) {
       btn.classList.remove('disabled-button');
     }
   }
 }
 
-function deleteRow() {
-  if (selectedRow) {
-    deleteCar(selectedRow.dataset['carId']).then(
-      async result => {
-        // console.log("succesful");
-        getCars(currentPage);
-      },
-      error => {
-        console.log(error);
-      }
-    )
+async function deleteRow() {
+  if (STORAGE.selectedRow) {
+    try {
+      const res = await deleteCar(STORAGE.selectedRow.dataset['carId']);
+      searchCars(STORAGE.currentPage);
+    } catch (ex) {
+      showErrorModal(ex);
+    }
   }
 }
 
-function moveCarToEdit() {
-  const carID = selectedRow.dataset['carId'];
+function passToEditCar() {
+  const carID = STORAGE.selectedRow.dataset['carId'];
   document.location.href = `create.html?car=${carID}`;
 }
 
-function sortCars(event) {
+async function sortCars(event) {
   console.log(event);
   if (event.target.nodeName !== 'P') {
     return;
   }
   const th = event.target.parentElement.parentElement;
   event.target.classList.toggle('selected-sort');
-  const field = th.dataset['name'];
-  const order = event.target.classList[0] === 'sort-ascending' ? 'asc' : 'desc';
+
   const table = document.querySelector('.cars');
-  table.dataset.sortName = field;
-  table.dataset.sortOrder = order;
-  getAllCars({'sortField': field, 'orderType': order}).then(
-    result => {
-      fillTable(JSON.parse(result));
-    },
-    error => {
-      console.log('error');
-    }
-  );
+  STORAGE.sortField = th.dataset['name'];
+  STORAGE.orderType = event.target.classList[0] === 'sort-ascending' ? 'asc' : 'desc';
+
+  try {
+    searchCars();
+  } catch (ex) {
+    showErrorModal(cars);
+  }
 }
 
 function initEventListeners() {
   const saveBtn = document.querySelector('.add');
-  saveBtn.addEventListener('click', addCar);
+  saveBtn.addEventListener('click', () => {
+    document.location.href = `create.html`;
+  });
 
   const searchingBtn = document.querySelector('.searching-button');
-  searchingBtn.addEventListener('click', getCars);
+  searchingBtn.addEventListener('click', searchCars);
 
   // const sidebarBtn = document.querySelector('.sidebar-state-button');
   // sidebarBtn.addEventListener('click', changeSideBarState);
@@ -271,7 +264,7 @@ function initEventListeners() {
   tableCarBody.addEventListener('click', selectCar);
 
   const editBtn = document.querySelector('.edit');
-  editBtn.addEventListener('click', moveCarToEdit);
+  editBtn.addEventListener('click', passToEditCar);
 
   const deleteBtn = document.querySelector('.delete');
   deleteBtn.addEventListener('click', deleteRow);
