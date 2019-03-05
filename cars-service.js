@@ -68,7 +68,6 @@ export function addCar(formData) {
         }
     });
     const json = JSON.stringify(object);
-    json['description'] = checkXSS(json['description']);
 
     xhr.onload = xhr.onerror = function() {
       if (this.status === 200) {

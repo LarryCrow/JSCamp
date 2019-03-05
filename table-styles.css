@@ -94,6 +94,7 @@
 
 .cars {
   margin: auto;
+  min-width: 1150px;
 }
 
 .form_item {
@@ -139,6 +140,7 @@
 
 .cars {
   border-collapse: collapse;
+  table-layout: fixed;
 }
 
 th,
@@ -159,25 +161,24 @@ th {
 .sort-ascending {
   width: 0; 
   height: 0; 
-  border-left: 0.6rem solid transparent;
-  border-right: 0.6rem solid transparent;
-  
-  border-bottom: 0.6rem solid black;
+  border-left: 0.5rem solid transparent;
+  border-right: 0.5rem solid transparent;
+  border-bottom: 0.5rem solid black;
 
-  top: -2px;
+  top: 0px;
   position: absolute;
-  left: -10px;
+  left: -13px;
 }
 
 .sort-descending {
   width: 0;
   height: 0;
-  border-left: 0.6rem solid transparent;
-  border-right: 0.6rem solid transparent;
-  border-top: 0.6rem solid black;
+  border-left: 0.5rem solid transparent;
+  border-right: 0.5rem solid transparent;
+  border-top: 0.5rem solid black;
   position: absolute;
   top: 12px;
-  left: -10px;
+  left: -13px;
 
 }
 
@@ -200,6 +201,12 @@ th {
 
 .selected-row:hover {
   background: rgba(0, 0 ,0 ,0.6);
+}
+
+.td-truncated {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .icons {

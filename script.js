@@ -63,7 +63,7 @@ function changePaginatorPages() {
 function getTableRow(car) {
   const tdArray = [];
 
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < 8; i++) {
     tdArray.push(document.createElement('td'));
   }
   tdArray[0].innerText = checkXSS(car.make.name);
@@ -71,14 +71,18 @@ function getTableRow(car) {
   tdArray[2].innerText = checkXSS(car.body_type.name);
   tdArray[3].innerText = car.year;
   tdArray[4].innerText = car.mileage;
-  tdArray[5].innerText = moment(car.created_at,"YYYY-MM-DD HH:mm:ss").format("DD.MM.YYYY");
-  tdArray[6].innerText = moment(car.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD.MM.YYYY");
+  tdArray[5].innerText = checkXSS(car.description);
+  tdArray[6].innerText = moment(car.created_at,"YYYY-MM-DD HH:mm:ss").format("DD.MM.YYYY");
+  tdArray[7].innerText = moment(car.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD.MM.YYYY");
+
+  tdArray[0].classList.add('td-truncated');
+  tdArray[5].classList.add('td-truncated');
 
   const tr = document.createElement('tr');
 
   tr.setAttribute('data-car-id', car.id);
   tr.classList.add('tb-row');
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i < tdArray.length; i++) {
     tr.appendChild(tdArray[i]);
   }
 
@@ -109,7 +113,7 @@ function fillTable(rows) {
     currentPage = 0;
     showErrorModal('No results. Please, change filters values');
   }
-  const toolbarBtns = document.getElementsByClassName('icons');
+  const toolbarBtns = document.querySelectorAll(".icons:not(.add)");
   for (let btn of toolbarBtns) {
     btn.classList.add('disabled-button');
   }
@@ -185,7 +189,7 @@ function switchPage(event) {
 }
 
 function selectCar(event) {
-  const toolbarBtns = document.getElementsByClassName("icons");
+  const toolbarBtns = document.querySelectorAll(".icons:not(.add)");
   if (selectedRow) {
     selectedRow.classList.remove('selected-row');
     if (selectedRow.dataset['carId'] !== event.target.parentElement.dataset['carId']) {
