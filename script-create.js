@@ -2,7 +2,6 @@ import { getCar, editCar, getMakeModels, getMakes, getBodyTypes, addCar } from "
 import { showErrorModal, checkXSS } from "./utilities.js";
 
 let CAR_ID;
-let invalid_date = true;
 
 function getSelectedCar() {
   const urlString = document.URL;
@@ -27,7 +26,8 @@ function getSelectedCar() {
   }
 }
 
-function saveCar() {
+function saveCar(event) {
+  event.preventDefault();
   const form = document.querySelector('.form');
   const formData = new FormData(form);
   if (!CAR_ID) {
@@ -97,8 +97,8 @@ function getMakeModelsAfterChange(make_id) {
 }
 
 function initEventListener() {
-  const editBtn = document.querySelector('.save-button');
-  editBtn.addEventListener('click', saveCar);
+  const form = document.querySelector('.form');
+  form.addEventListener('submit', saveCar);
 
   const makeSelect = document.querySelector('[name="make_id"');
   makeSelect.addEventListener('change', getMakeModelsAfterChange);
@@ -122,7 +122,9 @@ function initEventListener() {
       showErrorModal("Incorrect date");
     }
   });
+  inYear.max = new Date().getFullYear();
 }
+
 
 initEventListener();
 initializeSelectLists();

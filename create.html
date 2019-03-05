@@ -36,11 +36,11 @@
         <div class="form-column">
           <label class="form-item">
             <span class="item-title">Year</span>
-              <input name="year" type="number" class="input item-datepicker" required>
+              <input name="year" type="number" min="1990" class="input item-datepicker" required>
           </label>
           <label class="form-item">
             <span class="item-title">Mileage</span>
-              <input name="mileage" type="number" class="input item-text" required>
+              <input name="mileage" type="number" min="0" class="input item-text" required>
           </label>
         </div>
         <div class="form-column">
@@ -48,7 +48,7 @@
             <span class="item-title">Description</span>
               <textarea name="description" class="input item-textfield" required></textarea>
           </label>
-          <button class="save-button" type="button">Save</button>
+          <button class="save-button" type="submit">Save</button>
         </div>
       </form>
     </div>

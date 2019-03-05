@@ -122,16 +122,6 @@ export function deleteCar(id) {
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
 
-    // const object = {};
-    // formData.forEach( (value, key) => {
-    //     if (key !== 'description') {
-    //       object[key] = parseInt(value);
-    //     } else {
-    //       object[key] = checkXSS(value);
-    //     }
-    // });
-    // const json = JSON.stringify(object);
-
     xhr.onload = xhr.onerror = function() {
       if (this.status === 204) {
         res(this.response);
@@ -141,7 +131,6 @@ export function deleteCar(id) {
     };
 
     xhr.open('DELETE', `${URL}/api/cars/${id}`, true);
-    // xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send();
   });
 }
