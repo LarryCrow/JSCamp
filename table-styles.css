@@ -84,11 +84,6 @@
   color: white;
 }
 
-.disabled-paginator-items {
-  background: rgba(0, 0, 0, 0.3);
-  cursor: default;
-}
-
 .cars {
   width: 100%;
 }
@@ -146,7 +141,6 @@
   border-collapse: collapse;
 }
 
-
 th,
 td {
   border: 1px solid black;
@@ -200,7 +194,7 @@ th {
   color: rgb(245, 245, 245);
 }
 
-tbody tr:hover {
+.tb-row:hover {
   background: rgba(0, 0, 0, 0.05);
 }
 
@@ -254,3 +248,12 @@ tbody tr:hover {
   background:none;
 }
 
+
+.disabled-button {
+  background: rgba(0, 0, 0, 0.3);
+  cursor: default;
+}
+
+.disabled-button:hover {
+  background: rgba(0, 0, 0, 0.3);
+}

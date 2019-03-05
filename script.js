@@ -1,45 +1,9 @@
-import { getAllCars } from "./cars-service.js";
+import { getAllCars, deleteCar } from "./cars-service.js";
 import { showErrorModal, checkXSS } from "./utilities.js";
 
 let tablePageCount = 0;
 let currentPage = 0;
 let selectedRow;
-
-/**
- * Displaying modal window with message.
- *
- * @param {string} message Message for displaying.
- */
-function showErrorMessage(message) {
-  const messageBlock = document.createElement('div');
-  const messageText = document.createElement('p');
-  const messageButton = document.createElement('button');
-
-  messageBlock.className = 'error_container';
-  messageButton.className = 'button';
-  messageButton.innerHTML = 'Ок';
-  messageText.innerHTML = message || '';
-
-  messageBlock.appendChild(messageText);
-  messageBlock.appendChild(messageButton);
-
-  const errorBlock = document.querySelector('[data-layout="backdrop"]');
-
-  errorBlock.classList.toggle('backdrop');
-
-  document.body.appendChild(messageBlock);
-
-  const timer = setTimeout(() => {
-    errorBlock.classList.toggle('backdrop');
-    document.body.removeChild(messageBlock);
-  }, 10000);
-
-  messageButton.addEventListener('click', () => {
-    clearTimeout(timer);
-    errorBlock.classList.toggle('backdrop');
-    document.body.removeChild(messageBlock);
-  });
-}
 
 /**
  * Helping function for replacement displaying text into paginator's page.
@@ -68,8 +32,8 @@ function changePaginatorPages() {
   const parent = document.querySelector('.paginator');
 
   if (tablePageCount !== 0) {
-    parent.firstElementChild.classList.remove('disabled-paginator-items');
-    parent.lastElementChild.classList.remove('disabled-paginator-items');
+    parent.firstElementChild.classList.remove('disabled-button');
+    parent.lastElementChild.classList.remove('disabled-button');
     if (tablePageCount === 1) {
       changePaginationItems('...', currentPage, '...');
     } else if (currentPage === 1) {
@@ -82,7 +46,7 @@ function changePaginatorPages() {
   } else {
     for (let i = 0; i < parent.children.length; i++) {
       if (i === 0 || i === parent.children.length - 1) {
-        parent.children[i].classList.add('disabled-paginator-items');
+        parent.children[i].classList.add('disabled-button');
       } else {
         parent.children[i].classList.add('hidden');
       }
@@ -113,6 +77,7 @@ function getTableRow(car) {
   const tr = document.createElement('tr');
 
   tr.setAttribute('data-car-id', car.id);
+  tr.classList.add('tb-row');
   for (let i = 0; i < 7; i++) {
     tr.appendChild(tdArray[i]);
   }
@@ -143,6 +108,10 @@ function fillTable(rows) {
     tablePageCount = 0;
     currentPage = 0;
     showErrorModal('No results. Please, change filters values');
+  }
+  const toolbarBtns = document.getElementsByClassName('icons');
+  for (let btn of toolbarBtns) {
+    btn.classList.add('disabled-button');
   }
   changePaginatorPages();
 }
@@ -216,17 +185,41 @@ function switchPage(event) {
 }
 
 function selectCar(event) {
+  const toolbarBtns = document.getElementsByClassName("icons");
   if (selectedRow) {
     selectedRow.classList.remove('selected-row');
     if (selectedRow.dataset['carId'] !== event.target.parentElement.dataset['carId']) {
       selectedRow = event.target.parentElement;
       selectedRow.classList.add('selected-row');
+      for (let btn of toolbarBtns) {
+        btn.classList.remove('disabled-button');
+      }
     } else {
       selectedRow = null;
+      for (let btn of toolbarBtns) {
+        btn.classList.add('disabled-button');
+      }
     }
   } else {
     selectedRow = event.target.parentElement;
     selectedRow.classList.add('selected-row');
+    for (let btn of toolbarBtns) {
+      btn.classList.remove('disabled-button');
+    }
+  }
+}
+
+function deleteRow() {
+  if (selectedRow) {
+    deleteCar(selectedRow.dataset['carId']).then(
+      async result => {
+        // console.log("succesful");
+        getCars(currentPage);
+      },
+      error => {
+        console.log(error);
+      }
+    )
   }
 }
 
@@ -275,6 +268,9 @@ function initEventListeners() {
 
   const editBtn = document.querySelector('.edit');
   editBtn.addEventListener('click', moveCarToEdit);
+
+  const deleteBtn = document.querySelector('.delete');
+  deleteBtn.addEventListener('click', deleteRow);
 
   const tableCarHead = document.querySelector('.cars thead');
   tableCarHead.addEventListener('click', sortCars);
