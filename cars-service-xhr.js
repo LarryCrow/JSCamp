@@ -1,176 +1,118 @@
 export * from './cars-service-xhr.js';
-import { checkXSS } from './utilities.js';
+import { checkXSS, createURLParams, doXhrRequest } from './utilities.js';
 
 const baseURL = 'https://backend-jscamp.saritasa-hosting.com';
 
 /**
- * Get all cars from server with needed page and keyword.
+ * Get cars from server by params.
  *
  * @param {Object} params Parameters for GET query: { page, keyword, order_by, sort_order }
  * @returns {Object} Returns object { results: [], pagination: {}} with found cars and info about their amount,
- *                    also total pages for displaying.
+ *                   also total pages for displaying.
  */
-export function getAllCars(params) {
-  const url = new URL(`/api/cars?${createURLParams(params)}`, baseURL);
-  return new Promise((res, rej) => {
-    const xhr = new XMLHttpRequest();
-
-    xhr.onload = xhr.onerror = function() {
-      if (this.status === 200) {
-        res(this.response);
+export function getCars(params) {
+  const urlParams = createURLParams(params);
+  const url = new URL(`/api/cars?${urlParams}`, baseURL);
+  return new Promise((res, rej) => doXhrRequest('GET', url, 200, res, rej))
+    .then(response => {
+      return JSON.parse(response);
+    })
+    .catch(error => {
+      if (error === 503) {
+        return getCars(params)
       } else {
-        rej(this.status);
+        throw new Error('Page doesn\'t exist.');
       }
-    };
-
-    xhr.open('GET', url, true);
-    xhr.send();
-  })
-  .then( response => {
-    return JSON.parse(response);
-  })
-  .catch( error => {
-    if (error === 503) {
-      return getAllCars(params)
-    } else {
-      throw new Error('Page doesn\'t exist.');
-    }
-  });
+    });
 }
 
-/**
- * Helping function to create params string for GET query
- * @param {Object} params Object is used for construction
- * @return {String} string view ' ' or '?a=parA' or '?a=parA&b=parB....'
- */
-function createURLParams(params) {
-  const urlParams = new URLSearchParams();
-  for (let p in params) {
-    if (params.hasOwnProperty(p) && params[p] && params[p] !== '') {
-      urlParams.append(p, params[p]);
-    }
-  }
-  return urlParams;
-}
 
 /**
- * Add car.
+ * Add car with data from form.
  *
  * @param {Form} form Form with data for saving.
- * @returns {Promise} Return object with saved car.
+ * @returns {Object} Return object with saved car.
  */
 export function addCar(formData) {
   const url = new URL('/api/cars', baseURL);
-  return new Promise((res, rej) => {
-    const xhr = new XMLHttpRequest();
 
-    const object = {};
-    formData.forEach( (value, key) => {
-        if (key !== 'description') {
-          object[key] = parseInt(value);
-        } else {
-          object[key] = checkXSS(value);
-        }
+  const object = {};
+    formData.forEach((value, key) => {
+      if (key !== 'description') {
+        object[key] = parseInt(value);
+      } else {
+        object[key] = checkXSS(value);
+      }
     });
     const json = JSON.stringify(object);
 
-    xhr.onload = xhr.onerror = function() {
-      if (this.status === 200) {
-        res(this.response);
+  return new Promise((res, rej) => doXhrRequest('POST', url, 200, res, rej, json))
+    .then(response => {
+      return JSON.parse(response);
+    })
+    .catch(error => {
+      if (error.status === 503) {
+        return addCar(formData)
       } else {
-        rej(this);
+        throw new Error('Page doesn\'t exist.');
       }
-    };
-
-    xhr.open('POST', url, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(json);
-  })
-  .then( response => {
-    return JSON.parse(response);
-  })
-  .catch( error => {
-    if (error.status === 503) {
-      return addCar(formData)
-    } else {
-      throw new Error('Page doesn\'t exist.');
-    }
-  });
+    });
 }
 
 
 /**
  * Edit car.
  *
- * @param {Form} form Form with data for saving.
- * @returns {Promise} Return object with edited car.
+ * @param {FormData} form Data from form.
+ * @returns {Object} Return object with edited car.
  */
 export function editCar(formData, id) {
   const url = new URL(`/api/cars/${id}`, baseURL);
-  return new Promise((res, rej) => {
-    const xhr = new XMLHttpRequest();
 
-    const object = {};
-    formData.forEach( (value, key) => {
-        if (key !== 'description') {
-          object[key] = parseInt(value);
-        } else {
-          object[key] = checkXSS(value);
-        }
-    });
-    const json = JSON.stringify(object);
-
-    xhr.onload = xhr.onerror = function() {
-      if (this.status === 200) {
-        res(this.response);
-      } else {
-        rej(this);
-      }
-    };
-
-    xhr.open('PUT', url, true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.send(json);
-  })
-  .then( response => {
-    return JSON.parse(response);
-  })
-  .catch( error => {
-    if (error.status === 503) {
-      return editCar(formData, id);
+  const object = {};
+  formData.forEach((value, key) => {
+    if (key !== 'description') {
+      object[key] = parseInt(value);
     } else {
-      throw new Error('Some error');
+      object[key] = checkXSS(value);
     }
   });
+  const json = JSON.stringify(object);
+  
+  return new Promise((res, rej) => doXhrRequest('PUT', url, 200, res, rej, json))
+    .then(response => {
+      return JSON.parse(response);
+    })
+    .catch(error => {
+      if (error.status === 503) {
+        return editCar(formData, id);
+      } else {
+        throw new Error('Some error');
+      }
+    });
 }
 
+
+/**
+ * Delete car with the specified number
+ * 
+ * @param {String} id 
+ */
 export function deleteCar(id) {
   const url = new URL(`/api/cars/${id}`, baseURL);
-  return new Promise((res, rej) => {
-    const xhr = new XMLHttpRequest();
-
-    xhr.onload = xhr.onerror = function() {
-      if (this.status === 204) {
-        res(this.response);
+  return new Promise((res, rej) => doXhrRequest('DELETE', url, 204, res, rej))
+    .then(response => {
+      return 'Successful';
+    })
+    .catch(error => {
+      if (error.status === 503) {
+        return deleteCar(id)
       } else {
-        rej(this.status);
+        throw new Error('Some error');
       }
-    };
-
-    xhr.open('DELETE', url, true);
-    xhr.send();
-  })
-  .then( response => {
-    return 'Successful';
-  })
-  .catch( error => {
-    if (error.status === 503) {
-      return deleteCar(id)
-    } else {
-      throw new Error('Some error');
-    }
-  });
+    });
 }
+
 
 /**
  * Get car by id
@@ -180,112 +122,73 @@ export function deleteCar(id) {
  */
 export function getCar(id) {
   const url = new URL(`/api/cars/${id}`, baseURL);
-  return new Promise((res, rej) => {
-    const xhr = new XMLHttpRequest();
-
-    xhr.onload = xhr.onerror = function() {
-      if (this.status === 200) {
-        res(this.response);
+  return new Promise((res, rej) => doXhrRequest('GET', url, 200, res, rej))
+    .then(response => {
+      return JSON.parse(response);
+    })
+    .catch(error => {
+      if (error.status === 503) {
+        return getCar(car_id);
       } else {
-        rej(this);
+        throw new Error('Some error');
       }
-    }
-
-    xhr.open('GET', url, true);
-    xhr.send();
-  })
-  .then( response => {
-    return JSON.parse(response);
-  })
-  .catch( error => {
-    if (error.status === 503) {
-      return getCar(car_id);
-    } else {
-      throw new Error('Some error');
-    }
-  });
+    });
 }
 
+
+/**
+ * Get makes
+ */
 export function getMakes() {
   const url = new URL(`/api/dictionaries/makes`, baseURL);
-  return new Promise((res, rej) => {
-    const xhr = new XMLHttpRequest();
-
-    xhr.onload = xhr.onerror = function() {
-      if (this.status === 200) {
-        res(this.response);
+  return new Promise((res, rej) => doXhrRequest('GET', url, 200, res, rej))
+    .then(response => {
+      return JSON.parse(response);
+    })
+    .catch(error => {
+      if (error.status === 503) {
+        return getMakes();
       } else {
-        rej(this);
+        throw new Error('Some error');
       }
-    }
-
-    xhr.open('GET', url, true);
-    xhr.send();
-  })
-  .then( response => {
-    return JSON.parse(response);
-  })
-  .catch( error => {
-    if (error.status === 503) {
-      return getMakes();
-    } else {
-      throw new Error('Some error');
-    }
-  });
+    });
 }
 
-export function getMakeModels(makes_id){
+/**
+ * Get maker models
+ * 
+ * @param {String} makes_id Make's id for getting data
+ */
+export function getMakerModels(makes_id) {
   const url = new URL(`/api/dictionaries/makes/${makes_id}/models`, baseURL);
-  return new Promise((res, rej) => {
-    const xhr = new XMLHttpRequest();
-
-    xhr.onload = xhr.onerror = function() {
-      if (this.status === 200) {
-        res(this.response);
+  return new Promise((res, rej) => doXhrRequest('GET', url, 200, res, rej))
+    .then(response => {
+      return JSON.parse(response);
+    })
+    .catch(error => {
+      if (error.status === 503) {
+        return getMakerModels(makes_id);
       } else {
-        rej(this);
+        throw new Error('Some error ?');
       }
-    }
-
-    xhr.open('GET', url, true);
-    xhr.send();
-  })
-  .then( response => {
-    return JSON.parse(response);
-  })
-  .catch( error => {
-    if (error.status === 503) {
-      return getMakeModels(makes_id);
-    } else {
-      throw new Error('Some error ?');
-    }
-  });
+    });
 }
 
+
+/**
+ * Get body types
+ */
 export function getBodyTypes() {
   const url = new URL(`/api/dictionaries/body-types`, baseURL);
-  return new Promise((res, rej) => {
-    const xhr = new XMLHttpRequest();
-
-    xhr.onload = xhr.onerror = function() {
-      if (this.status === 200) {
-        res(this.response);
+  return new Promise((res, rej) => doXhrRequest('GET', url, 200, res, rej))
+    .then(response => {
+      return JSON.parse(response);
+    })
+    .catch(error => {
+      if (error.status === 503) {
+        return getBodyTypes();
       } else {
-        rej(this);
+        throw new Error('Some error');
       }
-    }
-
-    xhr.open('GET', url, true);
-    xhr.send();
-  })
-  .then( response => {
-    return JSON.parse(response);
-  })
-  .catch( error => {
-    if (error.status === 503) {
-      return getBodyTypes();
-    } else {
-      throw new Error('Some error');
-    }
-  });
+    });
 }
