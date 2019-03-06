@@ -1,4 +1,4 @@
-import { getAllCars, deleteCar } from "./cars-service-xhr.js";
+import { getCars, deleteCar } from "./cars-service-xhr.js";
 import { showErrorModal, checkXSS } from "./utilities.js";
 
 
@@ -22,9 +22,10 @@ const SORTING = {
  * @param {string} cur Value for current page.
  * @param {string} next Value for next page.
  */
-function changePaginationItems(prev, cur, next) {
+function fillPaginatorItems(prev, cur, next) {
   const pages = document.querySelector('.paginator').children;
 
+  // Don't change button for passing to first or last page
   for (let i = 0; i < 3; i++) {
     pages[i + 1].classList.remove('hidden');
   }
@@ -32,26 +33,36 @@ function changePaginationItems(prev, cur, next) {
   pages[2].innerText = cur;
   pages[3].innerText = next;
 
+  if (!Number.isFinite(prev)) {
+    pages[1].classList.add('paginator-item-not-page')
+  } else {
+    pages[1].classList.remove('paginator-items-not-page');
+  }
+  if (!Number.isFinite(next)) {
+    pages[3].classList.add('paginator-item-not-page')
+  } else {
+    pages[3].classList.remove('paginator-items-not-page');
+  }
   pages[2].classList.add('selected-paginator-item');
 }
 
 /**
  * Changes text when switching buttons or hide depending on the number of pages.
  */
-function changePaginatorPages() {
+function changePaginatorItems() {
   const parent = document.querySelector('.paginator');
 
   if (TABLEDATA.tablePageCount !== 0) {
     parent.firstElementChild.classList.remove('disabled-button');
     parent.lastElementChild.classList.remove('disabled-button');
     if (TABLEDATA.tablePageCount === 1) {
-      changePaginationItems('...', TABLEDATA.currentPage, '...');
+      fillPaginatorItems('...', TABLEDATA.currentPage, '...');
     } else if (TABLEDATA.currentPage === 1) {
-      changePaginationItems('...', TABLEDATA.currentPage, TABLEDATA.currentPage + 1);
+      fillPaginatorItems('...', TABLEDATA.currentPage, TABLEDATA.currentPage + 1);
     } else if (TABLEDATA.currentPage === TABLEDATA.tablePageCount) {
-      changePaginationItems(TABLEDATA.currentPage - 1, TABLEDATA.currentPage, '...');
+      fillPaginatorItems(TABLEDATA.currentPage - 1, TABLEDATA.currentPage, '...');
     } else {
-      changePaginationItems(TABLEDATA.currentPage - 1, TABLEDATA.currentPage, TABLEDATA.currentPage + 1);
+      fillPaginatorItems(TABLEDATA.currentPage - 1, TABLEDATA.currentPage, TABLEDATA.currentPage + 1);
     }
   } else {
     for (let i = 0; i < parent.children.length; i++) {
@@ -101,7 +112,7 @@ function getTableRow(car) {
 }
 
 /**
- * Creates table rows with cars and add their into table.
+ * Creates table rows with cars and add their into table. Update toolbar and storage properties.
  *
  * @param {Array} rows Data from server with cars.
  */
@@ -113,20 +124,20 @@ function fillTable(rows) {
     tbody.removeChild(tbody.firstChild);
   }
 
-  TABLEDATA.tablePageCount = rows.pagination.total_pages;
-  TABLEDATA.currentPage = rows.pagination.current_page;
-  
   rows.results.forEach(row => {
     tbody.appendChild(getTableRow(row));
   });
 
+  TABLEDATA.tablePageCount = rows.pagination.total_pages;
+  TABLEDATA.currentPage = rows.pagination.current_page;
+  
   TABLEDATA.selectedRow = null;
   const toolbarBtns = document.querySelectorAll(".icons:not(.add)");
   for (let btn of toolbarBtns) {
     btn.classList.add('disabled-button');
   }
 
-  changePaginatorPages();
+  changePaginatorItems();
 }
 
 /**
@@ -145,7 +156,7 @@ async function searchCars({pageNumber, keyword, sortField, orderType}) {
   }
 
   try {
-    const cars = await getAllCars(param);
+    const cars = await getCars(param);
     if (cars.results && cars.results.length > 0) {
       TABLEDATA.keyword = keyword ? keyword : TABLEDATA.keyword;
       fillTable(cars);
@@ -173,19 +184,27 @@ function switchPage(event) {
 
   if (!target.previousElementSibling) {
     // to first
-    if (TABLEDATA.currentPage !== 1) page = 1;
+    if (TABLEDATA.currentPage !== 1) page = 1; 
     else return;
+
   } else if (!target.nextElementSibling) {
     // to last
     if (TABLEDATA.currentPage !== TABLEDATA.tablePageCount) page = TABLEDATA.tablePageCount;
     else return;
+
   } else {
     page = parseInt(target.innerText, 10);
     if (page === TABLEDATA.currentPage || !page) return;
   }
+  
   searchCars({'pageNumber':page});
 }
 
+/**
+ * Select or unselect table's row. Change toolbar state.
+ * 
+ * @param {MouseEvent} event Event received by clicking on the table row
+ */
 function selectCar(event) {
   const toolbarBtns = document.querySelectorAll(".icons:not(.add)");
   if (TABLEDATA.selectedRow) {
@@ -211,6 +230,10 @@ function selectCar(event) {
   }
 }
 
+
+/**
+ * Delete selected row and update table.
+ */
 async function deleteRow() {
   if (TABLEDATA.selectedRow) {
     try {
@@ -222,6 +245,10 @@ async function deleteRow() {
   }
 }
 
+
+/**
+ * Open edit window
+ */
 function passToEditCar() {
   const carID = TABLEDATA.selectedRow.dataset['carId'];
   if (carID !== '') {
@@ -229,6 +256,11 @@ function passToEditCar() {
   }
 }
 
+/**
+ * Sort table depending on field and order. Call update table method.
+ * 
+ * @param {MouseEvent} event Event received by clicking on the sort button
+ */
 async function sortCars(event) {
   if (event.target.nodeName !== 'I') {
     return;
@@ -269,6 +301,10 @@ async function sortCars(event) {
   }
 }
 
+
+/**
+ * Initialize event listeners
+ */
 function initEventListeners() {
   const saveBtn = document.querySelector('.add');
   saveBtn.addEventListener('click', () => {
@@ -300,4 +336,4 @@ function initEventListeners() {
 }
 
 initEventListeners();
-changePaginatorPages();
+changePaginatorItems();

@@ -1,16 +1,20 @@
-import { getCar, editCar, getMakeModels, getMakes, getBodyTypes, addCar } from "./cars-service-xhr.js";
+import { getCar, editCar, getMakerModels, getMakes, getBodyTypes, addCar } from "./cars-service-xhr.js";
 import { showErrorModal, checkXSS } from "./utilities.js";
 
 let CAR_ID;
 
+
+/**
+ * Get car which was selected in the table
+ */
 async function getSelectedCar() {
-  const urlString = document.URL;
-  const url = new URLSearchParams(urlString.split('?')[1]);
-  CAR_ID = url.get('car');
+  const url = new URL(document.URL);
+  const params = url.searchParams;
+  CAR_ID = params.get('car');
   if (CAR_ID !== null) {
     try {
       const car = await getCar(CAR_ID);
-      await getMakeModelsAfterChange(car.make_id);
+      await getModels(car.make_id);
       const form = document.querySelector('.form');
       form.elements['make_id'].value = car.make_id;
       form.elements['car_model_id'].value = car.car_model_id;
@@ -24,6 +28,10 @@ async function getSelectedCar() {
   }
 }
 
+/**
+ * 
+ * @param {Mouse event} event Event recieved by clicking on save button
+ */
 async function saveCar(event) {
   event.preventDefault();
   const form = document.querySelector('.form');
@@ -48,7 +56,9 @@ async function saveCar(event) {
 }
 
 
-// TODO add other func(getModels, getCar)
+/**
+ * Get data to fill select lists and call method for getting selected car
+ */
 async function initializeSelectLists() {
   const makesSelect = document.querySelector('[name="make_id"]');
   const bodiesSelect = document.querySelector('[name="body_type_id"]');
@@ -72,12 +82,22 @@ async function initializeSelectLists() {
   getSelectedCar();
 }
 
-async function getMakeModelsAfterChange(make_id) {
+
+/**
+ * Get models for selected maker
+ * 
+ * @param {String} make_id 
+ */
+async function getModels(make_id) {
   const modelsSelect = document.querySelector('[name="car_model_id"]');
-  if (!make_id) return;
-  if (make_id.target) make_id = make_id.target.value;
+  if (!make_id) {
+    return;
+  }
   try {
-    const models_array = await getMakeModels(make_id);
+    const models_array = await getMakerModels(make_id);
+    while(modelsSelect.children.length !== 1) {
+      modelsSelect.removeChild(modelsSelect.lastChild);
+    }
     for (let i = 0; i < models_array.results.length; i++) {
       const option = document.createElement('option');
       option.value = models_array.results[i].id;
@@ -89,12 +109,17 @@ async function getMakeModelsAfterChange(make_id) {
   }
 }
 
+/**
+ * Initialize event listeners
+ */
 function initEventListener() {
   const form = document.querySelector('.form');
   form.addEventListener('submit', saveCar);
 
   const makeSelect = document.querySelector('[name="make_id"');
-  makeSelect.addEventListener('change', getMakeModelsAfterChange);
+  makeSelect.addEventListener('change', (event) => {
+    getModels(event.target.value);
+  });
 
   const inYear = document.querySelector('[name="year"');
   inYear.addEventListener('keyup', (event) => {
