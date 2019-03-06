@@ -1,7 +1,7 @@
 export * from './cars-service-xhr.js';
 import { checkXSS } from './utilities.js';
 
-const URL = 'https://backend-jscamp.saritasa-hosting.com';
+const baseURL = 'https://backend-jscamp.saritasa-hosting.com';
 
 /**
  * Get all cars from server with needed page and keyword.
@@ -11,7 +11,7 @@ const URL = 'https://backend-jscamp.saritasa-hosting.com';
  *                    also total pages for displaying.
  */
 export function getAllCars(params) {
-  const urlParams = createURL(params);
+  const url = new URL(`/api/cars?${createURLParams(params)}`, baseURL);
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
 
@@ -23,7 +23,7 @@ export function getAllCars(params) {
       }
     };
 
-    xhr.open('GET', `${URL}/api/cars${urlParams === '' ? '' : `?${urlParams}`}`, true);
+    xhr.open('GET', url, true);
     xhr.send();
   })
   .then( response => {
@@ -43,13 +43,14 @@ export function getAllCars(params) {
  * @param {Object} params Object is used for construction
  * @return {String} string view ' ' or '?a=parA' or '?a=parA&b=parB....'
  */
-function createURL(params) {
-  let str = [];
-  for (let p in params)
+function createURLParams(params) {
+  const urlParams = new URLSearchParams();
+  for (let p in params) {
     if (params.hasOwnProperty(p) && params[p] && params[p] !== '') {
-      str.push(encodeURIComponent(p) + "=" + encodeURIComponent(params[p]));
+      urlParams.append(p, params[p]);
     }
-  return str.join("&");
+  }
+  return urlParams;
 }
 
 /**
@@ -59,6 +60,7 @@ function createURL(params) {
  * @returns {Promise} Return object with saved car.
  */
 export function addCar(formData) {
+  const url = new URL('/api/cars', baseURL);
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
 
@@ -80,7 +82,7 @@ export function addCar(formData) {
       }
     };
 
-    xhr.open('POST', `${URL}/api/cars`, true);
+    xhr.open('POST', url, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(json);
   })
@@ -104,6 +106,7 @@ export function addCar(formData) {
  * @returns {Promise} Return object with edited car.
  */
 export function editCar(formData, id) {
+  const url = new URL(`/api/cars/${id}`, baseURL);
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
 
@@ -125,7 +128,7 @@ export function editCar(formData, id) {
       }
     };
 
-    xhr.open('PUT', `${URL}/api/cars/${id}`, true);
+    xhr.open('PUT', url, true);
     xhr.setRequestHeader("Content-Type", "application/json");
     xhr.send(json);
   })
@@ -142,6 +145,7 @@ export function editCar(formData, id) {
 }
 
 export function deleteCar(id) {
+  const url = new URL(`/api/cars/${id}`, baseURL);
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
 
@@ -153,7 +157,7 @@ export function deleteCar(id) {
       }
     };
 
-    xhr.open('DELETE', `${URL}/api/cars/${id}`, true);
+    xhr.open('DELETE', url, true);
     xhr.send();
   })
   .then( response => {
@@ -171,10 +175,11 @@ export function deleteCar(id) {
 /**
  * Get car by id
  * 
- * @param {string} car_id Car's ID
+ * @param {string} id Car's ID
  * @return {Promise} Return something lol
  */
-export function getCar(car_id) {
+export function getCar(id) {
+  const url = new URL(`/api/cars/${id}`, baseURL);
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
 
@@ -186,7 +191,7 @@ export function getCar(car_id) {
       }
     }
 
-    xhr.open('GET', `${URL}/api/cars/${car_id}`, true);
+    xhr.open('GET', url, true);
     xhr.send();
   })
   .then( response => {
@@ -202,6 +207,7 @@ export function getCar(car_id) {
 }
 
 export function getMakes() {
+  const url = new URL(`/api/dictionaries/makes`, baseURL);
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
 
@@ -213,7 +219,7 @@ export function getMakes() {
       }
     }
 
-    xhr.open('GET', `${URL}/api/dictionaries/makes`, true);
+    xhr.open('GET', url, true);
     xhr.send();
   })
   .then( response => {
@@ -229,6 +235,7 @@ export function getMakes() {
 }
 
 export function getMakeModels(makes_id){
+  const url = new URL(`/api/dictionaries/makes/${makes_id}/models`, baseURL);
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
 
@@ -240,7 +247,7 @@ export function getMakeModels(makes_id){
       }
     }
 
-    xhr.open('GET', `${URL}/api/dictionaries/makes/${makes_id}/models`, true);
+    xhr.open('GET', url, true);
     xhr.send();
   })
   .then( response => {
@@ -256,6 +263,7 @@ export function getMakeModels(makes_id){
 }
 
 export function getBodyTypes() {
+  const url = new URL(`/api/dictionaries/body-types`, baseURL);
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
 
@@ -267,7 +275,7 @@ export function getBodyTypes() {
       }
     }
 
-    xhr.open('GET', `${URL}/api/dictionaries/body-types`, true);
+    xhr.open('GET', url, true);
     xhr.send();
   })
   .then( response => {
