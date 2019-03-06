@@ -76,6 +76,7 @@ function getTableRow(car) {
   for (let i = 0; i < 8; i++) {
     tdArray.push(document.createElement('td'));
   }
+
   tdArray[0].innerText = checkXSS(car.make.name);
   tdArray[1].innerText = checkXSS(car.car_model.name);
   tdArray[2].innerText = checkXSS(car.body_type.name);
@@ -112,7 +113,6 @@ function fillTable(rows) {
     tbody.removeChild(tbody.firstChild);
   }
 
-  TABLEDATA.selectedRow = null;
   TABLEDATA.tablePageCount = rows.pagination.total_pages;
   TABLEDATA.currentPage = rows.pagination.current_page;
   
@@ -120,10 +120,12 @@ function fillTable(rows) {
     tbody.appendChild(getTableRow(row));
   });
 
+  TABLEDATA.selectedRow = null;
   const toolbarBtns = document.querySelectorAll(".icons:not(.add)");
   for (let btn of toolbarBtns) {
     btn.classList.add('disabled-button');
   }
+
   changePaginatorPages();
 }
 
@@ -155,15 +157,6 @@ async function searchCars({pageNumber, keyword, sortField, orderType}) {
     return false;
   } 
 }
-
-// /**
-//  * Show or hide sidebar.
-//  */
-// function changeSideBarState() {
-//   const sidebar = document.querySelector('.form-wrapper-sidebar');
-
-//   sidebar.classList.toggle('inactive-filters');
-// }
 
 /**
  * Switch page in paginator.
@@ -276,12 +269,6 @@ async function sortCars(event) {
   }
 }
 
-function clearStorage(obj) {
-  for (let prop in obj) {
-    obj[prop] = null;
-  }
-}
-
 function initEventListeners() {
   const saveBtn = document.querySelector('.add');
   saveBtn.addEventListener('click', () => {
@@ -295,9 +282,6 @@ function initEventListeners() {
       'keyword': document.querySelector('.searching-input').value
       });
     });
-
-  // const sidebarBtn = document.querySelector('.sidebar-state-button');
-  // sidebarBtn.addEventListener('click', changeSideBarState);
 
   const paginator = document.querySelector('.paginator');
   paginator.addEventListener('click', switchPage);
@@ -316,5 +300,4 @@ function initEventListeners() {
 }
 
 initEventListeners();
-
 changePaginatorPages();

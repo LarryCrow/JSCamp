@@ -11,16 +11,6 @@
   min-height: 100vh;
 }
 
-.form-wrapper-sidebar {
-  flex-grow: 0;
-  flex-shrink: 0;
-  transition: margin-left 0.5s ease, box-shadow 0.5s ease;
-  font-size: 0.9em;
-  position: relative;
-  width: 26em;
-  background: rgba(85, 204, 102, 0.5);
-}
-
 .result-table {
   display: block;
   background: rgba(123, 65, 201, 0.5);
@@ -108,32 +98,6 @@
   border: 1px solid darkgray;
 }
 
-.save-button {
-  background: inherit;
-  border: 1.5px solid palevioletred;
-  padding: .25em .75em;
-  min-width: 100px;
-  cursor: pointer;
-  transition-duration: 0.2s;
-  outline: 0;
-  position: relative;
-}
-
-.save-button:hover,
-.save-button:focus {
-  background: palevioletred;
-  color: rgb(245, 245, 245);
-}
-
-
-.save-button:active {
-  filter: brightness(120%);
-}
-
-.inactive-filters {
-  margin-left: -26em;
-}
-
 .cars {
   border-collapse: collapse;
   table-layout: fixed;
@@ -170,7 +134,6 @@ th {
 
 .icons {
   border: 2px solid black;
-  /* border-radius: 4px; */
   background: none;
   cursor: pointer;
   width: 2.2rem;
