@@ -231,7 +231,7 @@ async function deleteRow() {
 
 function passToEditCar() {
   const carID = TABLEDATA.selectedRow.dataset['carId'];
-  if (carID === '') {
+  if (carID !== '') {
     document.location.href = `create.html?car=${carID}`;
   }
 }
