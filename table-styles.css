@@ -13,7 +13,6 @@
 
 .result-table {
   display: block;
-  background: rgba(123, 65, 201, 0.5);
   flex-grow: 1;
   flex-shrink: 1;
   width: 100%;
@@ -45,7 +44,7 @@
 }
 
 .searching-input {
-  background: rgba(0, 0, 0, 0.35);
+  /* background: rgba(0, 0, 0, 0.35); */
   padding: 0.4rem 2rem 0.4rem 0.5rem;
   border: 1px solid darkgray;
 }
@@ -70,9 +69,21 @@
   display: none;
 }
 
+.paginator-item:not(.selected-paginator-item):not(.paginator-item-not-page):not(.disabled-button):hover {
+  background: rgba(151, 154, 255, 0.5);
+}
+
+.paginator-item-not-page {
+  border: none;
+  cursor: default;
+}
+
 .selected-paginator-item {
-  background: rgba(0, 0, 0, 0.5);
-  color: white;
+  background: rgb(151, 154, 255);
+}
+
+.paginator-item-not-page {
+  border: none;
 }
 
 .cars {
@@ -111,19 +122,20 @@ td {
 
 th {
   text-align: left;
+  background: rgb(151, 154, 255);
 }
 
-.selected-row {
-  background: rgba(0, 0 ,0 ,0.6);
-  color: rgb(245, 245, 245);
+.tb-row {
+  margin: 0.5rem 0;
 }
 
-.tb-row:hover {
+.tb-row:not(.selected-row):hover {
   background: rgba(0, 0, 0, 0.05);
 }
 
-.selected-row:hover {
-  background: rgba(0, 0 ,0 ,0.6);
+.selected-row {
+  background: rgb(255, 203, 151);
+  color: black;
 }
 
 .td-truncated {
@@ -141,7 +153,7 @@ th {
 }
 
 .icons:hover {
-  background: rgba(0, 0, 0, 0.05); 
+  background: rgba(151, 154, 255, 0.5);
 }
 
 
@@ -179,12 +191,12 @@ th {
 
 
 .disabled-button {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(77, 77, 77, 0.3);
   cursor: default;
 }
 
 .disabled-button:hover {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(77, 77, 77, 0.3);
 }
 
 .sort-icons {
@@ -198,5 +210,5 @@ th {
 }
 
 .selected-sort {
-  color: rgb(230, 230, 230);
+  color: rgb(255, 203, 151);
 }
