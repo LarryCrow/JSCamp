@@ -4,7 +4,7 @@ import { checkXSS } from './utilities.js';
 const URL = 'https://backend-jscamp.saritasa-hosting.com';
 
 /**
- * Get all cars from server with defining page and keyword.
+ * Get all cars from server with needed page and keyword.
  *
  * @param {Object} params Parameters for GET query: { page, keyword, order_by, sort_order }
  * @returns {Object} Returns object { results: [], pagination: {}} with found cars and info about their amount,
@@ -31,7 +31,7 @@ export function getAllCars(params) {
   })
   .catch( error => {
     if (error === 503) {
-      return getAllCars({pageNumber, keyword, sortField, orderType})
+      return getAllCars(params)
     } else {
       throw new Error('Page doesn\'t exist.');
     }

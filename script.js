@@ -112,8 +112,10 @@ function fillTable(rows) {
     tbody.removeChild(tbody.firstChild);
   }
 
+  TABLEDATA.selectedRow = null;
   TABLEDATA.tablePageCount = rows.pagination.total_pages;
   TABLEDATA.currentPage = rows.pagination.current_page;
+  
   rows.results.forEach(row => {
     tbody.appendChild(getTableRow(row));
   });
@@ -132,25 +134,21 @@ function fillTable(rows) {
  * @return {Boolean} True - if data were got, false - if not
  */
 async function searchCars({pageNumber, keyword, sortField, orderType}) {
-  const table = document.querySelector('.cars');
+  const isOk = (x) => x || x === '';
   const param = {
-    'page': Number.isFinite(pageNumber) ? pageNumber : (TABLEDATA.currentPage ? TABLEDATA.currentPage : ''),
-    'keyword': keyword ? keyword : (TABLEDATA.keyword ? TABLEDATA.keyword : ''),
-    'order_by': sortField ? sortField : (SORTING.sortField ? SORTING.sortField : ''),
-    'sort_order': orderType ? orderType : (SORTING.orderType ? SORTING.orderType : '')
+    'page': isOk(pageNumber) ? pageNumber : (TABLEDATA.currentPage ? TABLEDATA.currentPage : ''),
+    'keyword': isOk(keyword) ? keyword : (TABLEDATA.keyword ? TABLEDATA.keyword : ''),
+    'order_by': isOk(sortField) ? sortField : (SORTING.sortField ? SORTING.sortField : ''),
+    'sort_order': isOk(orderType) ? orderType : (SORTING.orderType ? SORTING.orderType : '')
   }
 
   try {
     const cars = await getAllCars(param);
     if (cars.results && cars.results.length > 0) {
+      TABLEDATA.keyword = keyword ? keyword : TABLEDATA.keyword;
       fillTable(cars);
-      TABLEDATA.keyword = keyword;
-      SORTING.sortField = sortField;
-      SORTING.orderType = orderType;
       return true;
     }
-    TABLEDATA.tablePageCount = 0;
-    TABLEDATA.currentPage = 0;
     throw new Error('No results. Please, change filters values');
   } catch (ex) {
     showErrorModal(ex);
@@ -244,23 +242,34 @@ async function sortCars(event) {
   }
   const th = event.target.parentElement.parentElement;
 
-  if (SORTING.sortedBtn === null || SORTING.sortedBtn !== event.target) {
-    SORTING.sortedBtn = event.target;
-    SORTING.sortField = th.dataset['name'];
-    SORTING.orderType = SORTING.sortedBtn.classList[0] === 'sort-ascending' ? 'asc' : 'desc';
+  const params = {
+    'pageNumber': '' 
+  }
+  if (SORTING.sortedBtn !== event.target) {
+    params.sortField = th.dataset['name'];
+    params.orderType = event.target.dataset['order'];
   } else {
-    clearStorage(SORTING);
+    params.sortField = '';
+    params.orderType = '';
   }
   
   try {
-    const isTableUpdated = await searchCars();
+    const isTableUpdated = await searchCars(params);
     if (isTableUpdated) {
-      if (SORTING.sortedBtn) {
-        if (btn.sortedBtn) {
-          buf.sortedBtn.classList.remove('selected-sort');
+
+      if (!SORTING.sortedBtn || SORTING.sortedBtn !== event.target) {
+        if (SORTING.sortedBtn) {
+          SORTING.sortedBtn.classList.remove('selected-sort');
         }
+        SORTING.sortedBtn = event.target;
         SORTING.sortedBtn.classList.add('selected-sort');
+      } else {
+        SORTING.sortedBtn.classList.remove('selected-sort');
+        SORTING.sortedBtn = null;
       }
+
+      SORTING.sortField = params.sortField;
+      SORTING.orderType = params.orderType;
     }
   } catch (ex) {
     showErrorModal(ex);
@@ -280,7 +289,12 @@ function initEventListeners() {
   });
 
   const searchingBtn = document.querySelector('.searching-button');
-  searchingBtn.addEventListener('click', () => {searchCars({'pageNumber': ''})});
+  searchingBtn.addEventListener('click', () => {
+    searchCars(
+      {'pageNumber': '',
+      'keyword': document.querySelector('.searching-input').value
+      });
+    });
 
   // const sidebarBtn = document.querySelector('.sidebar-state-button');
   // sidebarBtn.addEventListener('click', changeSideBarState);
