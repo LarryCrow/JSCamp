@@ -32,9 +32,9 @@
 }
 
 .table-wrapper {
-  width: 80%;
+  width: 90%;
   margin: auto;
-  min-width: 1020px;
+  min-width: 1230px;
 }
 
 .table-options {
@@ -51,6 +51,7 @@
   align-self: flex-end;
   padding-left: 1rem;
   position: relative;
+  margin-right: 0.5rem;
 }
 
 .searching-input {
@@ -90,11 +91,6 @@
 
 .saving-form {
   padding: 1em;
-}
-
-.cars {
-  margin: auto;
-  min-width: 1150px;
 }
 
 .form_item {
@@ -151,43 +147,6 @@ td {
 
 th {
   text-align: left;
-}
-
-.sorting {
-  float: right;
-  position: relative;
-}
-
-.sort-ascending {
-  width: 0; 
-  height: 0; 
-  border-left: 0.5rem solid transparent;
-  border-right: 0.5rem solid transparent;
-  border-bottom: 0.5rem solid black;
-
-  top: 0px;
-  position: absolute;
-  left: -13px;
-}
-
-.sort-descending {
-  width: 0;
-  height: 0;
-  border-left: 0.5rem solid transparent;
-  border-right: 0.5rem solid transparent;
-  border-top: 0.5rem solid black;
-  position: absolute;
-  top: 12px;
-  left: -13px;
-
-}
-
-.selected-sort {
-  color: white;
-}
-
-.sorting i{
-  font-size: 1.5rem;
 }
 
 .selected-row {
@@ -263,4 +222,18 @@ th {
 
 .disabled-button:hover {
   background: rgba(0, 0, 0, 0.3);
+}
+
+.sort-icons {
+  float: right;
+  cursor: default;
+}
+
+.sort-icons i {
+  padding: 0 0.2rem;
+  cursor: pointer;
+}
+
+.selected-sort {
+  color: rgb(230, 230, 230);
 }

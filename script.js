@@ -2,11 +2,15 @@ import { getAllCars, deleteCar } from "./cars-service-xhr.js";
 import { showErrorModal, checkXSS } from "./utilities.js";
 
 
-const STORAGE = {
-  'pageToMove': 0,
+const TABLEDATA = {
   'currentPage': 0,
   'tablePageCount': 0,
   'selectedRow': null,
+  'keyword': ''
+}
+
+const SORTING = {
+  'sortedBtn': null,
   'sortField': '',
   'orderType': ''
 }
@@ -37,17 +41,17 @@ function changePaginationItems(prev, cur, next) {
 function changePaginatorPages() {
   const parent = document.querySelector('.paginator');
 
-  if (STORAGE.tablePageCount !== 0) {
+  if (TABLEDATA.tablePageCount !== 0) {
     parent.firstElementChild.classList.remove('disabled-button');
     parent.lastElementChild.classList.remove('disabled-button');
-    if (STORAGE.tablePageCount === 1) {
-      changePaginationItems('...', STORAGE.currentPage, '...');
-    } else if (STORAGE.currentPage === 1) {
-      changePaginationItems('...', STORAGE.currentPage, STORAGE.currentPage + 1);
-    } else if (STORAGE.currentPage === STORAGE.tablePageCount) {
-      changePaginationItems(STORAGE.currentPage - 1, STORAGE.currentPage, '...');
+    if (TABLEDATA.tablePageCount === 1) {
+      changePaginationItems('...', TABLEDATA.currentPage, '...');
+    } else if (TABLEDATA.currentPage === 1) {
+      changePaginationItems('...', TABLEDATA.currentPage, TABLEDATA.currentPage + 1);
+    } else if (TABLEDATA.currentPage === TABLEDATA.tablePageCount) {
+      changePaginationItems(TABLEDATA.currentPage - 1, TABLEDATA.currentPage, '...');
     } else {
-      changePaginationItems(STORAGE.currentPage - 1, STORAGE.currentPage, STORAGE.currentPage + 1);
+      changePaginationItems(TABLEDATA.currentPage - 1, TABLEDATA.currentPage, TABLEDATA.currentPage + 1);
     }
   } else {
     for (let i = 0; i < parent.children.length; i++) {
@@ -108,17 +112,12 @@ function fillTable(rows) {
     tbody.removeChild(tbody.firstChild);
   }
 
-  if (rows.results && rows.results.length !== 0) {
-    STORAGE.tablePageCount = rows.pagination.total_pages;
-    STORAGE.currentPage = rows.pagination.current_page;
-    rows.results.forEach(row => {
-      tbody.appendChild(getTableRow(row));
-    });
-  } else {
-    STORAGE.tablePageCount = 0;
-    STORAGE.currentPage = 0;
-    showErrorModal('No results. Please, change filters values');
-  }
+  TABLEDATA.tablePageCount = rows.pagination.total_pages;
+  TABLEDATA.currentPage = rows.pagination.current_page;
+  rows.results.forEach(row => {
+    tbody.appendChild(getTableRow(row));
+  });
+
   const toolbarBtns = document.querySelectorAll(".icons:not(.add)");
   for (let btn of toolbarBtns) {
     btn.classList.add('disabled-button');
@@ -130,21 +129,32 @@ function fillTable(rows) {
  * Call function for getting cars from the server.
  *
  * @param {string} pageNumber Number of needed page.
+ * @return {Boolean} True - if data were got, false - if not
  */
-async function searchCars(pageNumber) {
+async function searchCars({pageNumber, keyword, sortField, orderType}) {
   const table = document.querySelector('.cars');
   const param = {
-    'pageNumber': Number.isFinite(pageNumber) ? pageNumber : '',
-    'keyword': document.querySelector('.searching-input').value,
-    'sortField': STORAGE.sortField,
-    'orderType': STORAGE.orderType
+    'page': Number.isFinite(pageNumber) ? pageNumber : (TABLEDATA.currentPage ? TABLEDATA.currentPage : ''),
+    'keyword': keyword ? keyword : (TABLEDATA.keyword ? TABLEDATA.keyword : ''),
+    'order_by': sortField ? sortField : (SORTING.sortField ? SORTING.sortField : ''),
+    'sort_order': orderType ? orderType : (SORTING.orderType ? SORTING.orderType : '')
   }
 
   try {
     const cars = await getAllCars(param);
-    fillTable(cars);
+    if (cars.results && cars.results.length > 0) {
+      fillTable(cars);
+      TABLEDATA.keyword = keyword;
+      SORTING.sortField = sortField;
+      SORTING.orderType = orderType;
+      return true;
+    }
+    TABLEDATA.tablePageCount = 0;
+    TABLEDATA.currentPage = 0;
+    throw new Error('No results. Please, change filters values');
   } catch (ex) {
     showErrorModal(ex);
+    return false;
   } 
 }
 
@@ -163,7 +173,7 @@ async function searchCars(pageNumber) {
  * @param {MouseEvent} event Event received by clicking on the paginator.
  */
 function switchPage(event) {
-  if (STORAGE.tablePageCount === 0) {
+  if (TABLEDATA.tablePageCount === 0) {
     return;
   }
 
@@ -172,38 +182,38 @@ function switchPage(event) {
 
   if (!target.previousElementSibling) {
     // to first
-    if (STORAGE.currentPage !== 1) page = 1;
+    if (TABLEDATA.currentPage !== 1) page = 1;
     else return;
   } else if (!target.nextElementSibling) {
     // to last
-    if (STORAGE.currentPage !== STORAGE.tablePageCount) page = STORAGE.tablePageCount;
+    if (TABLEDATA.currentPage !== TABLEDATA.tablePageCount) page = TABLEDATA.tablePageCount;
     else return;
   } else {
     page = parseInt(target.innerText, 10);
-    if (page === STORAGE.currentPage || !page) return;
+    if (page === TABLEDATA.currentPage || !page) return;
   }
-  searchCars(page);
+  searchCars({'pageNumber':page});
 }
 
 function selectCar(event) {
   const toolbarBtns = document.querySelectorAll(".icons:not(.add)");
-  if (STORAGE.STORAGE.selectedRow) {
-    STORAGE.selectedRow.classList.remove('selected-row');
-    if (STORAGE.selectedRow.dataset['carId'] !== event.target.parentElement.dataset['carId']) {
-      STORAGE.selectedRow = event.target.parentElement;
-      STORAGE.selectedRow.classList.add('selected-row');
+  if (TABLEDATA.selectedRow) {
+    TABLEDATA.selectedRow.classList.remove('selected-row');
+    if (TABLEDATA.selectedRow.dataset['carId'] !== event.target.parentElement.dataset['carId']) {
+      TABLEDATA.selectedRow = event.target.parentElement;
+      TABLEDATA.selectedRow.classList.add('selected-row');
       for (let btn of toolbarBtns) {
         btn.classList.remove('disabled-button');
       }
     } else {
-      STORAGE.selectedRow = null;
+      TABLEDATA.selectedRow = null;
       for (let btn of toolbarBtns) {
         btn.classList.add('disabled-button');
       }
     }
   } else {
-    STORAGE.selectedRow = event.target.parentElement;
-    STORAGE.selectedRow.classList.add('selected-row');
+    TABLEDATA.selectedRow = event.target.parentElement;
+    TABLEDATA.selectedRow.classList.add('selected-row');
     for (let btn of toolbarBtns) {
       btn.classList.remove('disabled-button');
     }
@@ -211,10 +221,10 @@ function selectCar(event) {
 }
 
 async function deleteRow() {
-  if (STORAGE.selectedRow) {
+  if (TABLEDATA.selectedRow) {
     try {
-      const res = await deleteCar(STORAGE.selectedRow.dataset['carId']);
-      searchCars(STORAGE.currentPage);
+      const res = await deleteCar(TABLEDATA.selectedRow.dataset['carId']);
+      searchCars(TABLEDATA.currentPage);
     } catch (ex) {
       showErrorModal(ex);
     }
@@ -222,26 +232,44 @@ async function deleteRow() {
 }
 
 function passToEditCar() {
-  const carID = STORAGE.selectedRow.dataset['carId'];
-  document.location.href = `create.html?car=${carID}`;
+  const carID = TABLEDATA.selectedRow.dataset['carId'];
+  if (carID === '') {
+    document.location.href = `create.html?car=${carID}`;
+  }
 }
 
 async function sortCars(event) {
-  console.log(event);
-  if (event.target.nodeName !== 'P') {
+  if (event.target.nodeName !== 'I') {
     return;
   }
   const th = event.target.parentElement.parentElement;
-  event.target.classList.toggle('selected-sort');
 
-  const table = document.querySelector('.cars');
-  STORAGE.sortField = th.dataset['name'];
-  STORAGE.orderType = event.target.classList[0] === 'sort-ascending' ? 'asc' : 'desc';
-
+  if (SORTING.sortedBtn === null || SORTING.sortedBtn !== event.target) {
+    SORTING.sortedBtn = event.target;
+    SORTING.sortField = th.dataset['name'];
+    SORTING.orderType = SORTING.sortedBtn.classList[0] === 'sort-ascending' ? 'asc' : 'desc';
+  } else {
+    clearStorage(SORTING);
+  }
+  
   try {
-    searchCars();
+    const isTableUpdated = await searchCars();
+    if (isTableUpdated) {
+      if (SORTING.sortedBtn) {
+        if (btn.sortedBtn) {
+          buf.sortedBtn.classList.remove('selected-sort');
+        }
+        SORTING.sortedBtn.classList.add('selected-sort');
+      }
+    }
   } catch (ex) {
-    showErrorModal(cars);
+    showErrorModal(ex);
+  }
+}
+
+function clearStorage(obj) {
+  for (let prop in obj) {
+    obj[prop] = null;
   }
 }
 
@@ -252,7 +280,7 @@ function initEventListeners() {
   });
 
   const searchingBtn = document.querySelector('.searching-button');
-  searchingBtn.addEventListener('click', searchCars);
+  searchingBtn.addEventListener('click', () => {searchCars({'pageNumber': ''})});
 
   // const sidebarBtn = document.querySelector('.sidebar-state-button');
   // sidebarBtn.addEventListener('click', changeSideBarState);

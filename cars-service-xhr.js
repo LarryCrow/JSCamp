@@ -6,19 +6,12 @@ const URL = 'https://backend-jscamp.saritasa-hosting.com';
 /**
  * Get all cars from server with defining page and keyword.
  *
- * @param {string} pageNumber Number of a needed page.
- * @param {string} keyword Filter for query on server.
+ * @param {Object} params Parameters for GET query: { page, keyword, order_by, sort_order }
  * @returns {Object} Returns object { results: [], pagination: {}} with found cars and info about their amount,
  *                    also total pages for displaying.
  */
-export function getAllCars({pageNumber, keyword, sortField, orderType}) {
-  const queryObject = {
-    'page': pageNumber,
-    'keyword': keyword,
-    'order_by': sortField,
-    'sort_order': orderType
-  }
-  const page = createURL(queryObject);
+export function getAllCars(params) {
+  const urlParams = createURL(params);
   return new Promise((res, rej) => {
     const xhr = new XMLHttpRequest();
 
@@ -30,7 +23,7 @@ export function getAllCars({pageNumber, keyword, sortField, orderType}) {
       }
     };
 
-    xhr.open('GET', `${URL}/api/cars${page === '' ? '' : `?${page}`}`, true);
+    xhr.open('GET', `${URL}/api/cars${urlParams === '' ? '' : `?${urlParams}`}`, true);
     xhr.send();
   })
   .then( response => {
