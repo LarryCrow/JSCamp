@@ -1,7 +1,9 @@
-import { getCars, deleteCar } from "./cars-service-xhr.js";
-import { showErrorModal, checkXSS } from "./utilities.js";
+import { getCars, deleteCar } from "../services/cars-service-xhr.js";
+import { showErrorModal, checkXSS } from "../utils/utilities.js";
 
-
+/**
+ * Table state
+ */
 const TABLEDATA = {
   'currentPage': 0,
   'tablePageCount': 0,
@@ -9,6 +11,9 @@ const TABLEDATA = {
   'keyword': ''
 }
 
+/**
+ * Params of sort
+ */
 const SORTING = {
   'sortedBtn': null,
   'sortField': '',
@@ -23,7 +28,7 @@ const SORTING = {
  * @param {string} next Value for next page.
  */
 function fillPaginatorItems(prev, cur, next) {
-  const pages = document.querySelector('.paginator').children;
+  const pages = document.querySelector('.paginator-list').children;
 
   // Don't change button for passing to first or last page
   for (let i = 0; i < 3; i++) {
@@ -36,12 +41,12 @@ function fillPaginatorItems(prev, cur, next) {
   if (!Number.isFinite(prev)) {
     pages[1].classList.add('paginator-item-not-page')
   } else {
-    pages[1].classList.remove('paginator-items-not-page');
+    pages[1].classList.remove('paginator-item-not-page');
   }
   if (!Number.isFinite(next)) {
     pages[3].classList.add('paginator-item-not-page')
   } else {
-    pages[3].classList.remove('paginator-items-not-page');
+    pages[3].classList.remove('paginator-item-not-page');
   }
   pages[2].classList.add('selected-paginator-item');
 }
@@ -50,7 +55,7 @@ function fillPaginatorItems(prev, cur, next) {
  * Changes text when switching buttons or hide depending on the number of pages.
  */
 function changePaginatorItems() {
-  const parent = document.querySelector('.paginator');
+  const parent = document.querySelector('.paginator-list');
 
   if (TABLEDATA.tablePageCount !== 0) {
     parent.firstElementChild.classList.remove('disabled-button');
@@ -252,7 +257,7 @@ async function deleteRow() {
 function passToEditCar() {
   const carID = TABLEDATA.selectedRow.dataset['carId'];
   if (carID !== '') {
-    document.location.href = `create.html?car=${carID}`;
+    document.location.href = `../form-page/form.html?car=${carID}`;
   }
 }
 
@@ -262,7 +267,7 @@ function passToEditCar() {
  * @param {MouseEvent} event Event received by clicking on the sort button
  */
 async function sortCars(event) {
-  if (event.target.nodeName !== 'I') {
+  if (event.target.nodeName !== 'I' || document.querySelector('.cars').tBodies[0].children.length === 0) {
     return;
   }
   const th = event.target.parentElement.parentElement;
@@ -308,7 +313,7 @@ async function sortCars(event) {
 function initEventListeners() {
   const saveBtn = document.querySelector('.add');
   saveBtn.addEventListener('click', () => {
-    document.location.href = `create.html`;
+    document.location.href = `../form-page/form.html`
   });
 
   const searchingBtn = document.querySelector('.searching-button');
@@ -319,7 +324,7 @@ function initEventListeners() {
       });
     });
 
-  const paginator = document.querySelector('.paginator');
+  const paginator = document.querySelector('.paginator-list');
   paginator.addEventListener('click', switchPage);
 
   const tableCarBody = document.querySelector('.cars tbody');

@@ -1,5 +1,5 @@
-import { getCar, editCar, getMakerModels, getMakes, getBodyTypes, addCar } from "./cars-service-xhr.js";
-import { showErrorModal, checkXSS } from "./utilities.js";
+import { getCar, editCar, getMakerModels, getMakes, getBodyTypes, addCar } from "../services/cars-service-xhr.js";
+import { showErrorModal, showNotification, checkXSS } from "../utils/utilities.js";
 
 let CAR_ID;
 
@@ -40,14 +40,12 @@ async function saveCar(event) {
     if (!CAR_ID) {
       let addedCar = await addCar(formData);
       if (addedCar.make_id) {
-        // TODO notification modal
-        console.log("successful");
+        showNotification("Car has been added");
       }
     } else {
       const editedCar = await editCar(formData, CAR_ID);
       if (editedCar.make_id) {
-        // TODO notification modal
-        console.log("successful");
+        showNotification("Car has been updated");
       }
     }
   } catch (ex) {
@@ -142,3 +140,4 @@ function initEventListener() {
 
 initEventListener();
 initializeSelectLists();
+showNotification();

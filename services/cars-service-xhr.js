@@ -1,5 +1,5 @@
 export * from './cars-service-xhr.js';
-import { checkXSS, createURLParams, doXhrRequest } from './utilities.js';
+import { checkXSS, createURLParams, doXhrRequest } from '../utils/utilities.js';
 
 const baseURL = 'https://backend-jscamp.saritasa-hosting.com';
 
@@ -18,7 +18,7 @@ export function getCars(params) {
       return JSON.parse(response);
     })
     .catch(error => {
-      if (error === 503) {
+      if (error.status === 503) {
         return getCars(params)
       } else {
         throw new Error('Page doesn\'t exist.');
