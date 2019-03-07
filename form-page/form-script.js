@@ -1,5 +1,5 @@
 import { getCar, editCar, getMakerModels, getMakes, getBodyTypes, addCar } from "../services/cars-service-xhr.js";
-import { showErrorModal, showNotification, checkXSS } from "../utils/utilities.js";
+import { showErrorModal, showNotification, preventXSS } from "../utils/utilities.js";
 
 let CAR_ID;
 
@@ -21,7 +21,7 @@ async function getSelectedCar() {
       form.elements['body_type_id'].value = car.body_type_id;
       form.elements['year'].value = car.year;
       form.elements['mileage'].value = car.mileage;
-      form.elements['description'].value = checkXSS(car.description);
+      form.elements['description'].value = preventXSS(car.description);
     } catch (ex) {
       showErrorModal(ex);
     }
@@ -66,14 +66,14 @@ async function initializeSelectLists() {
   for (let i = 0; i < arr[0].results.length; i++) {
     const option = document.createElement('option');
     option.value = arr[0].results[i].id;
-    option.innerText = checkXSS(arr[0].results[i].name);
+    option.innerText = preventXSS(arr[0].results[i].name);
     makesSelect.appendChild(option);
   }
 
   for (let i = 0; i < arr[1].results.length; i++) {
     const option = document.createElement('option');
     option.value = arr[1].results[i].id;
-    option.innerText = checkXSS(arr[1].results[i].name);
+    option.innerText = preventXSS(arr[1].results[i].name);
     bodiesSelect.appendChild(option);
   }
 
@@ -99,7 +99,7 @@ async function getModels(make_id) {
     for (let i = 0; i < models_array.results.length; i++) {
       const option = document.createElement('option');
       option.value = models_array.results[i].id;
-      option.innerText = checkXSS(models_array.results[i].name);
+      option.innerText = preventXSS(models_array.results[i].name);
       modelsSelect.appendChild(option);
     }
   } catch (ex) {

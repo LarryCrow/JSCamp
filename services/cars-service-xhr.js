@@ -1,5 +1,5 @@
 export * from './cars-service-xhr.js';
-import { checkXSS, createURLParams, doXhrRequest } from '../utils/utilities.js';
+import { preventXSS, createURLParams, doXhrRequest } from '../utils/utilities.js';
 
 const baseURL = 'https://backend-jscamp.saritasa-hosting.com';
 
@@ -41,7 +41,7 @@ export function addCar(formData) {
       if (key !== 'description') {
         object[key] = parseInt(value);
       } else {
-        object[key] = checkXSS(value);
+        object[key] = preventXSS(value);
       }
     });
     const json = JSON.stringify(object);
@@ -74,7 +74,7 @@ export function editCar(formData, id) {
     if (key !== 'description') {
       object[key] = parseInt(value);
     } else {
-      object[key] = checkXSS(value);
+      object[key] = preventXSS(value);
     }
   });
   const json = JSON.stringify(object);

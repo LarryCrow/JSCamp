@@ -1,5 +1,5 @@
 import { getCars, deleteCar } from "../services/cars-service-xhr.js";
-import { showErrorModal, checkXSS } from "../utils/utilities.js";
+import { showErrorModal, preventXSS } from "../utils/utilities.js";
 
 /**
  * Table state
@@ -93,12 +93,12 @@ function getTableRow(car) {
     tdArray.push(document.createElement('td'));
   }
 
-  tdArray[0].innerText = checkXSS(car.make.name);
-  tdArray[1].innerText = checkXSS(car.car_model.name);
-  tdArray[2].innerText = checkXSS(car.body_type.name);
+  tdArray[0].innerText = preventXSS(car.make.name);
+  tdArray[1].innerText = preventXSS(car.car_model.name);
+  tdArray[2].innerText = preventXSS(car.body_type.name);
   tdArray[3].innerText = car.year;
   tdArray[4].innerText = car.mileage;
-  tdArray[5].innerText = checkXSS(car.description);
+  tdArray[5].innerText = preventXSS(car.description);
   tdArray[6].innerText = moment(car.created_at,"YYYY-MM-DD HH:mm:ss").format("DD.MM.YYYY");
   tdArray[7].innerText = moment(car.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD.MM.YYYY");
 
