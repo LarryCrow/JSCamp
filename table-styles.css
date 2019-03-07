@@ -6,15 +6,9 @@
   list-style: none;
 }
 
-.page-wrapper {
-  display: flex;
-  min-height: 100vh;
-}
-
+/* Layout */
 .result-table {
   display: block;
-  flex-grow: 1;
-  flex-shrink: 1;
   width: 100%;
   position: relative;
   padding: 1em;
@@ -26,6 +20,7 @@
   min-width: 1230px;
 }
 
+/* Table options*/
 .table-options {
   display: flex;
   justify-content: space-between;
@@ -44,16 +39,20 @@
 }
 
 .searching-input {
-  /* background: rgba(0, 0, 0, 0.35); */
   padding: 0.4rem 2rem 0.4rem 0.5rem;
   border: 1px solid darkgray;
 }
 
 .paginator {
+  width: 15%;
+  align-self: center;
+}
+
+.paginator-list {
   display: flex;
   justify-content: space-around;
   align-self: flex-end;
-  width: 15%;
+  width: 100%;
 }
 
 .paginator-item {
@@ -65,12 +64,12 @@
   cursor: pointer;
 }
 
-.paginator-item.hidden{
-  display: none;
-}
-
 .paginator-item:not(.selected-paginator-item):not(.paginator-item-not-page):not(.disabled-button):hover {
   background: rgba(151, 154, 255, 0.5);
+}
+
+.paginator-item.hidden{
+  display: none;
 }
 
 .paginator-item-not-page {
@@ -82,40 +81,15 @@
   background: rgb(151, 154, 255);
 }
 
-.paginator-item-not-page {
-  border: none;
-}
-
+/* Table */
 .cars {
   width: 100%;
-}
-
-.saving-form {
-  padding: 1em;
-}
-
-.form_item {
-  display: flex;
-  justify-content: space-between;
-}
-
-.form_item:not(:first-child) {
-  margin-top: 1em;
-}
-
-.input {
-  width: 45%;
-  background: rgba(0, 0, 0, 0.05);
-  border: 1px solid darkgray;
-}
-
-.cars {
   border-collapse: collapse;
   table-layout: fixed;
 }
 
 th,
-td {
+.tb-row td {
   border: 1px solid black;
   padding: 0.5em 0.75em;
 }
@@ -144,6 +118,7 @@ th {
   overflow: hidden;
 }
 
+/* Buttons with icons */
 .icons {
   border: 2px solid black;
   background: none;
@@ -155,7 +130,6 @@ th {
 .icons:hover {
   background: rgba(151, 154, 255, 0.5);
 }
-
 
 .icons i {
   font-size: 1.25rem;
@@ -176,20 +150,6 @@ th {
   font-size: 0.8rem;
 }
 
-.sidebar-state-button {
-  position: absolute;
-  background: none;
-  border: none;
-  padding: 0.5em;
-  cursor: pointer;
-  outline: none;
-}
-
-.sidebar-state-button:hover {
-  background:none;
-}
-
-
 .disabled-button {
   background: rgba(77, 77, 77, 0.3);
   cursor: default;
@@ -199,6 +159,7 @@ th {
   background: rgba(77, 77, 77, 0.3);
 }
 
+/* Sorting */
 .sort-icons {
   float: right;
   cursor: default;

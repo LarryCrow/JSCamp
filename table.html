@@ -11,8 +11,7 @@
 </head>
 
 <body>
-  <div class='page-wrapper'>
-    <div class='result-table'>
+    <div class="result-table">
       <div class="table-wrapper">
         <div class="table-options">
           <div class="toolbar">
@@ -32,18 +31,20 @@
               <i class="fas fa-search"></i>
             </button>
           </div>
-          <ul class="paginator">
-            <li class="paginator-item" name="to-first"><i class="fas fa-angle-double-left"></i></li>
-            <li class="paginator-item hidden"></li>
-            <li class="paginator-item hidden"></li>
-            <li class="paginator-item hidden"></li>
-            <li class="paginator-item" name="to-last"><i class="fas fa-angle-double-right"></i></li>
-          </ul>
+          <nav class="paginator">
+            <ul class="paginator-list">
+                <li class="paginator-item" name="to-first"><i class="fas fa-angle-double-left"></i></li>
+                <li class="paginator-item hidden"></li>
+                <li class="paginator-item hidden"></li>
+                <li class="paginator-item hidden"></li>
+                <li class="paginator-item" name="to-last"><i class="fas fa-angle-double-right"></i></li>
+            </ul>
+          </nav>
         </div>
-        <table class="cars" data-sort-name="" data-sort-order="">
+        <table class="cars">
           <thead>
             <tr>
-              <th data-name="make_id" style="width: 16%">
+              <th class="table-head" data-name="make_id" style="width: 16%">
                 <span>Brand</span>
                 <span class="sort-icons">
                   <i data-order="asc" class="fas fa-arrow-up"></i>
@@ -51,49 +52,49 @@
                 </span>
                 <span></i></span>
               </th>
-              <th data-name="car_model_id" style="width: 12%">
+              <th class="table-head" data-name="car_model_id" style="width: 12%">
                 <span>Model</span>
                 <span class="sort-icons">
                   <i data-order="asc" class="fas fa-arrow-up"></i>
                   <i data-order="desc" class="fas fa-arrow-down"></i>
                 </span>
               </th>
-              <th data-name="body_type_id" style="width: 12%">
+              <th class="table-head" data-name="body_type_id" style="width: 12%">
                 <span>Body type</span>
                 <span class="sort-icons">
                   <i data-order="asc" class="fas fa-arrow-up"></i>
                   <i data-order="desc" class="fas fa-arrow-down"></i>
                 </span>
               </th>
-              <th data-name="year" style="width: 8%">
+              <th class="table-head" data-name="year" style="width: 8%">
                 <span>Year</span>
                 <span class="sort-icons">
                   <i data-order="asc" class="fas fa-arrow-up"></i>
                   <i data-order="desc" class="fas fa-arrow-down"></i>
                 </span>
               </th>
-              <th data-name="mileage" style="width: 10%">
+              <th class="table-head" data-name="mileage" style="width: 10%">
                 <span>Mileage</span>
                 <span class="sort-icons">
                   <i data-order="asc" class="fas fa-arrow-up"></i>
                   <i data-order="desc" class="fas fa-arrow-down"></i>
                 </span>
               </th>
-              <th data-name="description" style="width: 18%">
+              <th class="table-head" data-name="description" style="width: 18%">
                 <span>Description</span>
                 <span class="sort-icons">
                   <i data-order="asc" class="fas fa-arrow-up"></i>
                   <i data-order="desc" class="fas fa-arrow-down"></i>
                 </span>
               </th>
-              <th data-name="created-at" style="width: 12%">
+              <th class="table-head" data-name="created-at" style="width: 12%">
                 <span>Created at</span>
                 <span class="sort-icons">
                   <i data-order="asc" class="fas fa-arrow-up"></i>
                   <i data-order="desc" class="fas fa-arrow-down"></i>
                 </span>
               </th>
-              <th data-name="updated-at" style="width: 12%">
+              <th class="table-head" data-name="updated-at" style="width: 12%">
                 <span>Updated at</span>
                 <span class="sort-icons">
                   <i data-order="asc" class="fas fa-arrow-up"></i>
@@ -108,7 +109,6 @@
         </table>
       </div>
     </div>
-  </div>
   <script src="moment.js"></script>
   <script type="module" src="script.js"></script>
 </body>

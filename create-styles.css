@@ -5,21 +5,22 @@
   box-sizing:border-box;
 }
 
+/* Form layout */
 .form-wrapper {
   box-sizing: border-box;
   width: 40%;
   min-width: 600px;
   max-width: 1100px;
   margin: 15vh auto 0 auto;
-  border: 2px solid  palevioletred;
+  border: 2px solid  rgba(151, 154, 255);;
   color: rgb(80, 80, 80);
 }
 
 .form-title {
   padding: 0.5em 0.75em;
-  border-bottom: 2px solid palevioletred;
-  font-size: 1.5rem;
-  font-style: normal;
+  border-bottom: 2px solid rgba(151, 154, 255);;
+  font-size: 1.75rem;
+  font-weight: normal;
 }
 
 .form {
@@ -51,6 +52,7 @@
   color: black;
 }
 
+/* Form inputs */
 .form-column .input {
   width: 100%;
   box-sizing: border-box;
@@ -62,14 +64,14 @@
 }
 
 .input:focus {
-  box-shadow: 0 3px palevioletred;
+  box-shadow: 0 3px rgba(151, 154, 255);;
   outline: 0;
 }
 
 .save-button {
   margin-top: 10px;
   background: inherit;
-  border: 1.5px solid palevioletred;
+  border: 1.5px solid rgba(151, 154, 255);;
   padding: .25em .75em;
   min-width: 100px;
   cursor: pointer;
@@ -80,7 +82,7 @@
 
 .save-button:hover,
 .save-button:focus {
-  background: palevioletred;
+  background: rgba(151, 154, 255);;
   color: rgb(245, 245, 245);
 }
 
@@ -95,8 +97,4 @@
   left: 15px;
   top: 15px;
   color: rgb(140, 140, 140);
-}
-
-.error-date.error-date {
-  background: rgba(255, 0, 0, 0.3);
 }
