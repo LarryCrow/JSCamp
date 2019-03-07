@@ -193,3 +193,15 @@ export function doXhrRequest(reqMethod, url, successfulStatus, resolve, reject, 
   }
   xhr.send(json);
 }
+
+/**
+ * Get param from cookie by name
+ * 
+ * @param {String} name Name of param which value we need
+ */
+export function getCookie(name) {
+  const matches = document.cookie.match(new RegExp(
+    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+  ));
+  return matches ? decodeURIComponent(matches[1]) : undefined;
+}

@@ -1,5 +1,5 @@
 import { getCar, editCar, getMakerModels, getMakes, getBodyTypes, addCar } from "../services/cars-service-xhr.js";
-import { showErrorModal, showNotification, checkXSS } from "../utils/utilities.js";
+import { showErrorModal, showNotification, checkXSS, getCookie } from "../utils/utilities.js";
 
 let CAR_ID;
 
@@ -143,3 +143,4 @@ function initEventListener() {
 
 initEventListener();
 initializeSelectLists();
+showNotification(getCookie('token'));

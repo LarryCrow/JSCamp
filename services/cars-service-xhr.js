@@ -37,14 +37,14 @@ export function addCar(formData) {
   const url = new URL('/api/cars', baseURL);
 
   const object = {};
-    formData.forEach((value, key) => {
-      if (key !== 'description') {
-        object[key] = parseInt(value);
-      } else {
-        object[key] = checkXSS(value);
-      }
-    });
-    const json = JSON.stringify(object);
+  formData.forEach((value, key) => {
+    if (key !== 'description') {
+      object[key] = parseInt(value);
+    } else {
+      object[key] = checkXSS(value);
+    }
+  });
+  const json = JSON.stringify(object);
 
   return new Promise((res, rej) => doXhrRequest('POST', url, 200, res, rej, json))
     .then(response => {
@@ -189,6 +189,28 @@ export function getBodyTypes() {
         return getBodyTypes();
       } else {
         throw new Error('Some error');
+      }
+    });
+}
+
+export function logIn(formData) {
+  const url = new URL(`/api/auth`, baseURL);
+
+  const object = {};
+  formData.forEach((value, key) => {
+    object[key] = value;
+  });
+  const json = JSON.stringify(object);
+
+  return new Promise((res, rej) => doXhrRequest('POST', url, 200, res, rej, json))
+    .then(response => {
+      return JSON.parse(response);
+    })
+    .catch(error => {
+      if (error.status === 503) {
+        return logIn(formData);
+      } else {
+        throw new Error('Can\'t authorize');
       }
     });
 }
