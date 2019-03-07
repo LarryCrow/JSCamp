@@ -140,4 +140,3 @@ function initEventListener() {
 
 initEventListener();
 initializeSelectLists();
-showNotification();

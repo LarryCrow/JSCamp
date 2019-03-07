@@ -128,7 +128,7 @@ export function getCar(id) {
     })
     .catch(error => {
       if (error.status === 503) {
-        return getCar(car_id);
+        return getCar(id);
       } else {
         throw new Error('Some error');
       }
