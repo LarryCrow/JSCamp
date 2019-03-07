@@ -90,7 +90,7 @@ export function showNotification(message = 'Notification') {
 export function createURLParams(params) {
   const urlParams = new URLSearchParams();
   for (let p in params) {
-    if (params.hasOwnProperty(p) && params[p] && params[p] !== '') {
+    if (params.hasOwnProperty(p) && (params[p] || params[p] === 0) && params[p] !== '') {
       urlParams.append(p, params[p]);
     }
   }
