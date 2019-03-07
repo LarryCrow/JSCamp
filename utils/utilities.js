@@ -119,6 +119,10 @@ export function showNotification(message = 'Notification') {
   document.head.appendChild(styleBlock);
   document.body.appendChild(notificationBlock);
 
+  /**
+   * I added setTimeout during closing because class 'notif-block-closed' use animation with duration 1 second.
+   * So, I need to wait until animation will end and delete element after that.
+   */
   const closeTimer = setTimeout(() => {
     notificationBlock.classList.add('notif-block-closed');
     setTimeout(() => document.body.removeChild(notificationBlock), 1000);

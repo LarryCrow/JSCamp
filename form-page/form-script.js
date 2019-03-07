@@ -135,6 +135,9 @@ function initEventListener() {
     }
   });
   inYear.max = new Date().getFullYear();
+  
+  const inMileage = document.querySelector('[name="mileage"');
+  inMileage.max = Math.pow(2,32) - 1;
 }
 
 
