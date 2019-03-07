@@ -31,24 +31,24 @@ function fillPaginatorItems(prev, cur, next) {
   const pages = document.querySelector('.paginator-list').children;
 
   // Don't change button for passing to first or last page
-  for (let i = 0; i < 3; i++) {
-    pages[i + 1].classList.remove('hidden');
-  }
-  pages[1].innerText = prev;
-  pages[2].innerText = cur;
-  pages[3].innerText = next;
+  const [ prevPageBtn, curPageBtn, nextPageBtn ] = [pages[1], pages[2], pages[3]];
+  [ prevPageBtn, curPageBtn, nextPageBtn ].forEach(page => page.classList.remove('hidden'));
+
+  prevPageBtn.innerText = prev;
+  curPageBtn.innerText = cur;
+  nextPageBtn.innerText = next;
 
   if (!Number.isFinite(prev)) {
-    pages[1].classList.add('paginator-item-not-page')
+    prevPageBtn.classList.add('paginator-item-not-page')
   } else {
-    pages[1].classList.remove('paginator-item-not-page');
+    prevPageBtn.classList.remove('paginator-item-not-page');
   }
   if (!Number.isFinite(next)) {
-    pages[3].classList.add('paginator-item-not-page')
+    nextPageBtn.classList.add('paginator-item-not-page')
   } else {
-    pages[3].classList.remove('paginator-item-not-page');
+    nextPageBtn.classList.remove('paginator-item-not-page');
   }
-  pages[2].classList.add('selected-paginator-item');
+  curPageBtn.classList.add('selected-paginator-item');
 }
 
 /**

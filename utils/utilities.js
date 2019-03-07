@@ -55,7 +55,6 @@ export function showNotification(message = 'Notification') {
 
   notificationBlock.appendChild(messageText);
   notificationBlock.appendChild(button);
-  document.head.appendChild(styleBlock);
   document.body.appendChild(notificationBlock);
 
   /**
