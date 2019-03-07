@@ -114,12 +114,12 @@ function initEventListener() {
   const form = document.querySelector('.form');
   form.addEventListener('submit', saveCar);
 
-  const makeSelect = document.querySelector('[name="make_id"');
+  const makeSelect = document.querySelector('[name="make_id"]');
   makeSelect.addEventListener('change', (event) => {
     getModels(event.target.value);
   });
 
-  const inYear = document.querySelector('[name="year"');
+  const inYear = document.querySelector('[name="year"]');
   inYear.addEventListener('keyup', (event) => {
     if (event.target.value.length === 4) {
       const year = parseInt(event.target.value);
@@ -136,7 +136,7 @@ function initEventListener() {
   });
   inYear.max = new Date().getFullYear();
   
-  const inMileage = document.querySelector('[name="mileage"');
+  const inMileage = document.querySelector('[name="mileage"]');
   inMileage.max = Math.pow(2,32) - 1;
 }
 
