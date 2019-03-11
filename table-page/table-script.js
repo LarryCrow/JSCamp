@@ -1,5 +1,7 @@
 import { getCars, deleteCar } from "../services/cars-service-xhr.js";
-import { showErrorModal, checkXSS } from "../utils/utilities.js";
+import { showErrorModal, checkXSS, getToken } from "../utils/utilities.js";
+
+let TOKEN;
 
 /**
  * Table state
@@ -340,5 +342,6 @@ function initEventListeners() {
   tableCarHead.addEventListener('click', sortCars);
 }
 
+TOKEN = getToken();
 initEventListeners();
 changePaginatorItems();

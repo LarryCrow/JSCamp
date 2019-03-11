@@ -176,7 +176,7 @@ export function checkXSS(str) {
  * @param {Function} reject 
  * @param {Object} json
  */
-export function doXhrRequest(reqMethod, url, successfulStatus, resolve, reject, json) {
+export function doXhrRequest({reqMethod, url, successfulStatus, resolve, reject, token, json}) {
   const xhr = new XMLHttpRequest();
 
   xhr.onload = xhr.onerror = function () {
@@ -189,19 +189,22 @@ export function doXhrRequest(reqMethod, url, successfulStatus, resolve, reject, 
 
   xhr.open(reqMethod, url);
   if (reqMethod === 'POST' || reqMethod === 'PUT') {
-    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader('Content-Type', 'application/json');
+  }
+  if (token) {
+    xhr.setRequestHeader('x-csrf-token', token);
   }
   xhr.send(json);
 }
 
 /**
- * Get param from cookie by name
- * 
- * @param {String} name Name of param which value we need
+ * Check is token exist
+ * @returns {String} Recieved token
  */
-export function getCookie(name) {
-  const matches = document.cookie.match(new RegExp(
-    "(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
-  ));
-  return matches ? decodeURIComponent(matches[1]) : undefined;
+export function getToken() {
+  const token = window.localStorage.getItem('token');
+  if (!token) {
+    document.location.href = '../auth-page/auth.html';
+  }
+  return token;
 }

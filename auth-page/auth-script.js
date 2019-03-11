@@ -1,4 +1,4 @@
-import {logIn} from "../services/cars-service-xhr.js";
+import { logIn } from '../services/cars-service-xhr.js';
 
 async function signIn() {
     event.preventDefault();
@@ -7,8 +7,11 @@ async function signIn() {
 
     try {
         const res = await logIn(formData);
-        document.cookie = `token=${res.token};path=/`;
-        document.location.href = "../form-page/form.html";
+        if (res.token) {
+            window.localStorage.setItem('token', res.token);
+            history.back();
+            document.location.href = '../table-page/table.html';
+        }
     } catch (ex) {
         showErrorModal(ex);
     }
