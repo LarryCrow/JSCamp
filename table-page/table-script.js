@@ -1,4 +1,4 @@
-import { getCars, deleteCar } from "../services/cars-service-xhr.js";
+import { getCars, deleteCar } from "../services/cars-service-fetch.js";
 import { showErrorModal, checkXSS, getToken } from "../utils/utilities.js";
 
 let TOKEN;

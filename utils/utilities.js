@@ -197,6 +197,20 @@ export function doXhrRequest({reqMethod, url, successfulStatus, resolve, reject,
   xhr.send(json);
 }
 
+export function doFetchRequest({reqMethod, url, json}) {
+  const option = {
+    'method': reqMethod,
+		'headers': {
+      'Content-type': 'application/json',
+      'Authorization': `Bearer${getToken()}`
+    }
+  }
+  if (json) {
+    option['body'] = json;
+  }
+  return fetch(url, option);
+}
+
 /**
  * Check is token exist
  * @returns {String} Recieved token
@@ -204,7 +218,10 @@ export function doXhrRequest({reqMethod, url, successfulStatus, resolve, reject,
 export function getToken() {
   const token = window.localStorage.getItem('token');
   if (!token) {
-    document.location.href = '../auth-page/auth.html';
+    if (document.URL !==  'http://127.0.0.1:5500/auth-page/auth.html') {
+      document.location.href = '../auth-page/auth.html';
+    }
+  } else {
+    return token;
   }
-  return token;
 }
