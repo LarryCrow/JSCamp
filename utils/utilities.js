@@ -132,7 +132,7 @@ export function doXhrRequest({reqMethod, url, successfulStatus, resolve, reject,
   if (reqMethod === 'POST' || reqMethod === 'PUT') {
     xhr.setRequestHeader('Content-Type', 'application/json');
   }
-  xhr.setRequestHeader('x-csrf-token', getToken());
+  xhr.setRequestHeader('Authorization', getToken());
   xhr.send(json);
 }
 
