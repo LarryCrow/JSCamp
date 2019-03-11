@@ -31,6 +31,7 @@
     "stylelint-no-unsupported-browser-features": "^3.0.2"
   },
   "dependencies": {
-    "moment": "^2.24.0"
+    "moment": "^2.24.0",
+    "vue-cli": "^2.9.6"
   }
 }
