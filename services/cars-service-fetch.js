@@ -1,5 +1,5 @@
 export * from './cars-service-fetch.js';
-import { checkXSS, createURLParams, getToken, doFetchRequest } from '../utils/utilities.js';
+import { preventXSS, createURLParams, getToken, doFetchRequest } from '../utils/utilities.js';
 
 const baseURL = 'https://backend-jscamp.saritasa-hosting.com';
 const token = getToken();
@@ -40,7 +40,7 @@ export async function addCar(formData) {
 		if (key !== 'description') {
 			object[key] = parseInt(value);
 		} else {
-			object[key] = checkXSS(value);
+			object[key] = preventXSS(value);
 		}
 	});
 	const json = JSON.stringify(object);
@@ -71,7 +71,7 @@ export async function editCar(formData, id) {
 		if (key !== 'description') {
 			object[key] = parseInt(value);
 		} else {
-			object[key] = checkXSS(value);
+			object[key] = preventXSS(value);
 		}
 	});
 	const json = JSON.stringify(object);
