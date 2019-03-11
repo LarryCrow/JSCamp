@@ -272,7 +272,7 @@ async function sortCars(event) {
   if (event.target.nodeName !== 'I' || document.querySelector('.cars').tBodies[0].children.length === 0) {
     return;
   }
-  const th = event.target.parentElement.parentElement;
+  const th = event.target.parentElement.parentElement.parentElement;
 
   const params = {
     'pageNumber': '' 
@@ -338,8 +338,10 @@ function initEventListeners() {
   const deleteBtn = document.querySelector('.delete');
   deleteBtn.addEventListener('click', deleteRow);
 
-  const tableCarHead = document.querySelector('.cars thead');
-  tableCarHead.addEventListener('click', sortCars);
+  const sortButtons = document.querySelectorAll('.btn-sort');
+  for (let btn of sortButtons) {
+    btn.addEventListener('click', sortCars);
+  }
 }
 
 TOKEN = getToken();
