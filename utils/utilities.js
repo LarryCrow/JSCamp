@@ -12,20 +12,20 @@ export function showErrorModal(message = 'An unexpected error occured, sorry') {
   const messageText = document.createElement('p');
   const button = document.createElement('button');
 
-  backdrop.style.cssText = `width: 100%; height: 100vh; position: absolute; top: 0; 
-                              left: 0; background: rgba(100, 100, 100, 0.5); z-index: 5;`;
-  messageBlock.style.cssText = `width: 15%;  min-width: 350px; height: 140px; border: 1px solid black; background: white;
-                                  margin: 35vh auto 0 auto; display:flex; flex-direction: column; justify-content: space-around`;
-  messageText.style.cssText = 'padding: 1em';
-  button.style.cssText = `width: 40%; background: inherit; border: 1.5px solid palevioletred; padding: 0.25em 0.75em;
-                            min-width: 100px; cursor: pointer; align-self: center; outline: 0px;`;
+  backdrop.classList.add('error-backdrop');
+  messageBlock.classList.add('error-message-block');
+  messageText.classList.add('error-message-text');
+  button.classList.add('error-button-close');
 
   messageText.innerText = message;
   button.innerText = "Ok";
 
+  const styles = includeCSS('../utils/errorModal.css');
+
   backdrop.addEventListener('click', (event) => {
     if (event.target.nodeName === 'BUTTON' || event.target.nodeName === 'ARTICLE') {
       document.body.removeChild(backdrop);
+      document.head.removeChild(styles);
     }
   });
 
@@ -48,75 +48,13 @@ export function showNotification(message = 'Notification') {
   messageText.classList.add('notif-message');
   button.classList.add('notif-btn-close');
 
-  const styleBlock = document.createElement('style');
-  styleBlock.innerText = `
-    @keyframes show{
-      0%{
-        opacity: 0;
-      }
-      
-      100% {
-        opacity: 1;
-      }
-    }
-
-    @keyframes close{
-      0%{
-        opacity: 1;
-      }
-      100%{
-        opacity: 0;
-      }
-    }
-
-    .notif-block {
-      width: 12%;
-      min-width: 200px;
-      background: rgb(130, 84, 255);
-      height: 300px;
-      display:flex; 
-      flex-direction: column; 
-      justify-content: space-around; 
-      position: fixed; 
-      bottom: 5vh; 
-      right: 2vw;
-      opacity:0; 
-      transition: 1s; 
-      animation: show 1s 1; 
-      animation-fill-mode: forwards;                           
-    }
-
-    .notif-block-closed {
-      animation: close 1s 1;
-      animation-fill-mode: forwards;
-      transition: 1s;
-      opacity: 1;
-    }
-
-    .notif-message {
-      padding: 1em;
-      color: white;
-    }
-
-    .notif-btn-close {
-      width: 35%;
-      background: inherit;
-      border: 1.5px solid white;
-      padding: 0.25em 0.75em;
-      min-width: 100px;
-      cursor: pointer;
-      align-self: center;
-      outline: 0px;
-      color: white;
-    }
-  `;
+  const style = includeCSS('../utils/notificationModal.css');
 
   messageText.innerText = message;
   button.innerText = "Ok";
 
   notificationBlock.appendChild(messageText);
   notificationBlock.appendChild(button);
-  document.head.appendChild(styleBlock);
   document.body.appendChild(notificationBlock);
 
   /**
@@ -125,7 +63,10 @@ export function showNotification(message = 'Notification') {
    */
   const closeTimer = setTimeout(() => {
     notificationBlock.classList.add('notif-block-closed');
-    setTimeout(() => document.body.removeChild(notificationBlock), 1000);
+    setTimeout(() => {
+      document.body.removeChild(notificationBlock)
+      document.head.removeChild(style);
+    }, 1000);
   }, 5000);
 
   button.addEventListener('click', (event) => {
@@ -133,7 +74,10 @@ export function showNotification(message = 'Notification') {
       clearTimeout(closeTimer);
     }
     notificationBlock.classList.add('notif-block-closed');
-    setTimeout(() => document.body.removeChild(notificationBlock), 1000);
+    setTimeout(() => {
+      document.body.removeChild(notificationBlock)
+      document.head.removeChild(style);
+    }, 1000);
   });
 }
 
@@ -146,7 +90,7 @@ export function showNotification(message = 'Notification') {
 export function createURLParams(params) {
   const urlParams = new URLSearchParams();
   for (let p in params) {
-    if (params.hasOwnProperty(p) && params[p] && params[p] !== '') {
+    if (params.hasOwnProperty(p) && (params[p] || params[p] === 0) && params[p] !== '') {
       urlParams.append(p, params[p]);
     }
   }
@@ -160,23 +104,20 @@ export function createURLParams(params) {
  * @param {String} str String for checking 
  * @return {String} String withous <script> tags
  */
-export function checkXSS(str) {
-  const regex = /<script>\S*<\/script>/
-  const newString = str.replace(regex, "");
-  return newString.replace(/\s+/g, ' ').trim()
+export function preventXSS(str) {
+  var text = document.createTextNode(str);
+  var p = document.createElement('p');
+  p.appendChild(text);
+  return p.innerHTML;
 }
 
 /**
  * Do request with specified params
  * 
- * @param {String} reqMethod 
- * @param {String} url 
- * @param {Number} successfulStatus 
- * @param {Function} resolve 
- * @param {Function} reject 
- * @param {Object} json
+ * @param {Object} param0 reqMethod - Request method, url - URL, successfulStatus - the status at which call resolve method
+ * resolve - callback after getting data, reject - callback after getting error, json - body of request
  */
-export function doXhrRequest({reqMethod, url, successfulStatus, resolve, reject, token, json}) {
+export function doXhrRequest({reqMethod, url, successfulStatus, resolve, reject, json}) {
   const xhr = new XMLHttpRequest();
 
   xhr.onload = xhr.onerror = function () {
@@ -191,12 +132,15 @@ export function doXhrRequest({reqMethod, url, successfulStatus, resolve, reject,
   if (reqMethod === 'POST' || reqMethod === 'PUT') {
     xhr.setRequestHeader('Content-Type', 'application/json');
   }
-  if (token) {
-    xhr.setRequestHeader('x-csrf-token', token);
-  }
+  xhr.setRequestHeader('x-csrf-token', getToken());
   xhr.send(json);
 }
 
+/**
+ * Do fetch request with specified params
+ * @param {Object} param0 reqMethod - Request method, url - URL, json - body of request
+ * @returns {Promise} Promise for handling
+ */
 export function doFetchRequest({reqMethod, url, json}) {
   const option = {
     'method': reqMethod,
@@ -224,4 +168,18 @@ export function getToken() {
   } else {
     return token;
   }
+}
+
+/**
+ * An auxiliary function that connects a CSS file for a modal window that calls it
+ * 
+ * @param {String} file Path to file
+ */
+function includeCSS(file){
+  const style = document.createElement('link');
+  style.href = file;
+  style.rel = 'stylesheet';
+  document.head.appendChild(style);
+
+  return style;
 }

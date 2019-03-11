@@ -1,7 +1,8 @@
 import { getCars, deleteCar } from "../services/cars-service-fetch.js";
-import { showErrorModal, checkXSS, getToken } from "../utils/utilities.js";
+import { showErrorModal, preventXSS, getToken } from "../utils/utilities.js";
 
 let TOKEN;
+
 
 /**
  * Table state
@@ -33,24 +34,24 @@ function fillPaginatorItems(prev, cur, next) {
   const pages = document.querySelector('.paginator-list').children;
 
   // Don't change button for passing to first or last page
-  for (let i = 0; i < 3; i++) {
-    pages[i + 1].classList.remove('hidden');
-  }
-  pages[1].innerText = prev;
-  pages[2].innerText = cur;
-  pages[3].innerText = next;
+  const [, prevPageBtn, curPageBtn, nextPageBtn ] = pages;
+  [ prevPageBtn, curPageBtn, nextPageBtn ].forEach(page => page.classList.remove('hidden'));
+
+  prevPageBtn.innerText = prev;
+  curPageBtn.innerText = cur;
+  nextPageBtn.innerText = next;
 
   if (!Number.isFinite(prev)) {
-    pages[1].classList.add('paginator-item-not-page')
+    prevPageBtn.classList.add('paginator-item-not-page')
   } else {
-    pages[1].classList.remove('paginator-item-not-page');
+    prevPageBtn.classList.remove('paginator-item-not-page');
   }
   if (!Number.isFinite(next)) {
-    pages[3].classList.add('paginator-item-not-page')
+    nextPageBtn.classList.add('paginator-item-not-page')
   } else {
-    pages[3].classList.remove('paginator-item-not-page');
+    nextPageBtn.classList.remove('paginator-item-not-page');
   }
-  pages[2].classList.add('selected-paginator-item');
+  curPageBtn.classList.add('selected-paginator-item');
 }
 
 /**
@@ -95,12 +96,12 @@ function getTableRow(car) {
     tdArray.push(document.createElement('td'));
   }
 
-  tdArray[0].innerText = checkXSS(car.make.name);
-  tdArray[1].innerText = checkXSS(car.car_model.name);
-  tdArray[2].innerText = checkXSS(car.body_type.name);
+  tdArray[0].innerText = preventXSS(car.make.name);
+  tdArray[1].innerText = preventXSS(car.car_model.name);
+  tdArray[2].innerText = preventXSS(car.body_type.name);
   tdArray[3].innerText = car.year;
   tdArray[4].innerText = car.mileage;
-  tdArray[5].innerText = checkXSS(car.description);
+  tdArray[5].innerText = preventXSS(car.description);
   tdArray[6].innerText = moment(car.created_at,"YYYY-MM-DD HH:mm:ss").format("DD.MM.YYYY");
   tdArray[7].innerText = moment(car.updated_at, "YYYY-MM-DD HH:mm:ss").format("DD.MM.YYYY");
 

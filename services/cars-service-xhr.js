@@ -1,5 +1,6 @@
 export * from './cars-service-xhr.js';
-import { checkXSS, createURLParams, doXhrRequest, getToken } from '../utils/utilities.js';
+import { preventXSS, createURLParams, doXhrRequest, getToken } from '../utils/utilities.js';
+
 
 const baseURL = 'https://backend-jscamp.saritasa-hosting.com';
 const token = getToken();
@@ -30,9 +31,8 @@ export function getCars(params) {
     .catch(error => {
       if (error.status === 503) {
         return getCars(params)
-      } else {
-        throw new Error('Page doesn\'t exist.');
       }
+      throw new Error('Page doesn\'t exist.');
     });
 }
 
@@ -51,7 +51,7 @@ export function addCar(formData) {
     if (key !== 'description') {
       object[key] = parseInt(value);
     } else {
-      object[key] = checkXSS(value);
+      object[key] = preventXSS(value);
     }
   });
   const json = JSON.stringify(object);
@@ -73,9 +73,8 @@ export function addCar(formData) {
     .catch(error => {
       if (error.status === 503) {
         return addCar(formData)
-      } else {
-        throw new Error('Page doesn\'t exist.');
       }
+      throw new Error('Page doesn\'t exist.');
     });
 }
 
@@ -94,7 +93,7 @@ export function editCar(formData, id) {
     if (key !== 'description') {
       object[key] = parseInt(value);
     } else {
-      object[key] = checkXSS(value);
+      object[key] = preventXSS(value);
     }
   });
   const json = JSON.stringify(object);
@@ -116,9 +115,9 @@ export function editCar(formData, id) {
     .catch(error => {
       if (error.status === 503) {
         return editCar(formData, id);
-      } else {
-        throw new Error('Some error');
-      }
+      } else
+      throw new Error('Some error');
+
     });
 }
 
@@ -146,9 +145,8 @@ export function deleteCar(id) {
     .catch(error => {
       if (error.status === 503) {
         return deleteCar(id)
-      } else {
-        throw new Error('Some error');
-      }
+      } else
+      throw new Error('Some error');
     });
 }
 
@@ -177,9 +175,8 @@ export function getCar(id) {
     .catch(error => {
       if (error.status === 503) {
         return getCar(id);
-      } else {
-        throw new Error('Some error');
       }
+      throw new Error('Some error');
     });
 }
 
@@ -204,9 +201,8 @@ export function getMakes() {
     .catch(error => {
       if (error.status === 503) {
         return getMakes();
-      } else {
-        throw new Error('Some error');
       }
+      throw new Error('Some error');
     });
 }
 
@@ -232,9 +228,8 @@ export function getMakerModels(makes_id) {
     .catch(error => {
       if (error.status === 503) {
         return getMakerModels(makes_id);
-      } else {
-        throw new Error('Some error ?');
       }
+      throw new Error('Some error ?');
     });
 }
 
@@ -259,9 +254,8 @@ export function getBodyTypes() {
     .catch(error => {
       if (error.status === 503) {
         return getBodyTypes();
-      } else {
-        throw new Error('Some error');
       }
+      throw new Error('Some error');
     });
 }
 
