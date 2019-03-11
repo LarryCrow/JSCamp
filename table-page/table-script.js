@@ -31,7 +31,7 @@ function fillPaginatorItems(prev, cur, next) {
   const pages = document.querySelector('.paginator-list').children;
 
   // Don't change button for passing to first or last page
-  const [ prevPageBtn, curPageBtn, nextPageBtn ] = [pages[1], pages[2], pages[3]];
+  const [, prevPageBtn, curPageBtn, nextPageBtn ] = pages;
   [ prevPageBtn, curPageBtn, nextPageBtn ].forEach(page => page.classList.remove('hidden'));
 
   prevPageBtn.innerText = prev;
