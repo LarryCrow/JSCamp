@@ -1,20 +1,21 @@
 <template>
   <div id="app">
-    <TableCars/>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue';
-import TableCars from './components/TableCars/TableCars.vue';
+// import TableCars from './components/TableCars/TableCars.vue';
+// import FormCars from './components/FormCars/FormCars.vue';
 
 export default {
-  name: 'app',
+  name: "app",
   components: {
-    HelloWorld,
-    TableCars
+  },
+  created: function() {
+    this.$router.push('table');
   }
-}
+};
 </script>
 
 <style src="@fortawesome/fontawesome-free/css/all.css"></style>

@@ -32,7 +32,8 @@ export default {
 		setPaginatatorValues: setPaginatatorValues,
 		switchPage: switchPage,
 		sortCars: sortCars,
-		deleteRow: deleteRow
+		deleteRow: deleteRow,
+		passToEditCar: passToEditCar
 	}
 }
 
@@ -83,23 +84,24 @@ function setPaginatatorValues(paginator) {
 	} else if (paginator.current_page === 1) {
 		this.pageState.pages = ['...', paginator.current_page, paginator.current_page + 1];
 	} else if (paginator.current_page === paginator.total_pages) {
-		this.pageState.pages[paginator.current_page - 1, paginator.current_page, '...'];
+		this.pageState.pages = [paginator.current_page - 1, paginator.current_page, '...'];
 	} else {
-		this.pageState.pages[paginator.current_page - 1, paginator.current_page, paginator.current_page + 1];
+		this.pageState.pages = [paginator.current_page - 1, paginator.current_page, paginator.current_page + 1];
 	}
 	this.pageState.currentPage = paginator.current_page;
+	this.pageState.totalPages = paginator.total_pages;
 }
 
 function switchPage(event) {
 	const target = event.target.nodeName === 'I' ? event.target.parentElement : event.target;
 	let page;
 	if (!target.previousElementSibling) {
-    // to first
+    // to the first page
     if (this.pageState.currentPage !== 1) page = 1; 
     else return;
 
   } else if (!target.nextElementSibling) {
-    // to last
+    // to the last page
     if (this.pageState.currentPage !== this.pageState.totalPages) page = this.pageState.totalPages;
     else return;
   } else {
@@ -160,5 +162,11 @@ async function deleteRow() {
 			// showErrorModal(ex);
 			console.log(ex);
     }
+	}
+}
+
+function passToEditCar() {
+	if (this.selectedCar.id) {
+		this.$router.push('form');
 	}
 }

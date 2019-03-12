@@ -6,7 +6,7 @@
           <button class="icons add" type="button" title="Create new car">
             <i class="fas fa-plus"></i>
           </button>
-          <button class="icons edit" v-bind:class="{ disabled: !selectedCar.row }" type="button" title="Edit selected car">
+          <button class="icons edit" v-on:click="passToEditCar" v-bind:class="{ disabled: !selectedCar.row }" type="button" title="Edit selected car">
             <i class="fas fa-pen"></i>
           </button>
           <button class="icons delete" v-on:click="deleteRow" v-bind:class="{ disabled: !selectedCar.row }" type="button" title="Delete selected car">
@@ -21,15 +21,16 @@
         </div>
         <nav class="paginator">
           <ul class="paginator-list">
-            <li class="paginator-item" name="to-first">
+            <li class="paginator-item" v-on:click="switchPage" name="to-first">
               <i class="fas fa-angle-double-left"></i>
             </li>
             <li class="paginator-item"
-                v-for="page in pageState.pages" v-bind:key="page"
-                v-on:click="switchPage">
+                v-for="(page, index) in pageState.pages" v-bind:key="page"
+                v-on:click="switchPage"
+                v-bind:class="{'selected-paginator-item': index === 1, 'paginator-item-not-page': page === '...'}">
               {{page}}
             </li>
-            <li class="paginator-item" name="to-last">
+            <li class="paginator-item" v-on:click="switchPage" name="to-last">
               <i class="fas fa-angle-double-right"></i>
             </li>
           </ul>
