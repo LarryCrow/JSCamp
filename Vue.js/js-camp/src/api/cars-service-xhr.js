@@ -1,6 +1,7 @@
 export * from './cars-service-xhr.js';
 import { preventXSS, createURLParams, doXhrRequest } from '../utils/utilities.js';
 
+const axios = require('axios');
 const baseURL = 'https://backend-jscamp.saritasa-hosting.com';
 
 /**
@@ -10,21 +11,22 @@ const baseURL = 'https://backend-jscamp.saritasa-hosting.com';
  * @returns {Object} Returns object { results: [], pagination: {}} with found cars and info about their amount,
  *                   also total pages for displaying.
  */
-export function getCars(params) {
+export async function getCars(params) {
   const urlParams = createURLParams(params);
   const url = new URL(`/api/cars?${urlParams}`, baseURL);
-  return new Promise((res, rej) => doXhrRequest('GET', url, 200, res, rej))
-    .then(response => {
-      return JSON.parse(response);
+
+  return axios.get(url)
+    .then((response) => {
+      return response.data;
     })
-    .catch(error => {
-      if (error.status === 503) {
-        return getCars(params)
+    .catch((e) => {
+      if (e.response.status === 503) {
+        return getCars(params);
+      } else {
+        throw new Error(e.message);
       }
-      throw new Error('Page doesn\'t exist.');
     });
 }
-
 
 /**
  * Add car with data from form.
@@ -96,18 +98,14 @@ export function editCar(formData, id) {
  * 
  * @param {String} id 
  */
-export function deleteCar(id) {
+export async function deleteCar(id) {
   const url = new URL(`/api/cars/${id}`, baseURL);
-  return new Promise((res, rej) => doXhrRequest('DELETE', url, 204, res, rej))
-    .then(response => {
-      return 'Successful';
-    })
-    .catch(error => {
-      if (error.status === 503) {
-        return deleteCar(id)
-      } else
-      throw new Error('Some error');
-    });
+  try {
+    await axios.delete(url);
+    return true;
+  } catch (ex) {
+    throw new Error(ex);
+  }
 }
 
 

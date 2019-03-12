@@ -17,5 +17,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style src="@fortawesome/fontawesome-free/css/all.css"></style>
