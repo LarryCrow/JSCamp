@@ -1,17 +1,26 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router'
-import store from './store/index';
+import Vuex from 'vuex';
+import store from './store';
 
+Vue.use(Vuex);
 Vue.use(VueRouter)
 Vue.config.productionTip = false
 
 import App from './App.vue'
 import TableCars from './components/TableCars/TableCars.vue';
 import FormCars from './components/FormCars/FormCars.vue';
+import Auth from './components/Auth/Auth.vue';
+import ErrorModal from './utils/ErrorModal/ErrorModal.vue';
+import NotificationModal from './utils/NotificationModal/NotificationModal.vue';
+
+Vue.component('error-modal', ErrorModal);
+Vue.component('notif-modal', NotificationModal);
 
 const routes = [
   { path: '/table', component: TableCars },
-  { path: '/form', component: FormCars }
+  { path: '/form*', component: FormCars },
+  { path: '/auth', component: Auth}
 ]
 
 const router = new VueRouter({
@@ -19,7 +28,7 @@ const router = new VueRouter({
 })
 
 new Vue({
-  render (h) { return h(App) },
   router,
-  store
+  store,
+  render (h) { return h(App) },
 }).$mount('#app');

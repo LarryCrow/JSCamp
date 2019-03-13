@@ -5,15 +5,20 @@
 </template>
 
 <script>
-// import TableCars from './components/TableCars/TableCars.vue';
-// import FormCars from './components/FormCars/FormCars.vue';
 
 export default {
   name: "app",
   components: {
   },
   created: function() {
-    this.$router.push('table');
+    const token = window.localStorage.getItem('token');
+    if (!token) {
+      this.$router.push('auth');
+    }
+    this.$store.dispatch('setToken', {'token': token});
+    if (document.URL === 'http://localhost:8080/#/') {
+      this.$router.push('table');
+    }
   }
 };
 </script>

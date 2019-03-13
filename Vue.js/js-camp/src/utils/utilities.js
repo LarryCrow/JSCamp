@@ -1,85 +1,6 @@
 export * from './utilities.js';
 
-
-/**
- * Create modal window with backdrop and display it. Delete DOM element after closing.
- * 
- * @param {String} message Message for displaying 
- */
-export function showErrorModal(message = 'An unexpected error occured, sorry') {
-  const backdrop = document.createElement('article');
-  const messageBlock = document.createElement('div');
-  const messageText = document.createElement('p');
-  const button = document.createElement('button');
-
-  backdrop.classList.add('error-backdrop');
-  messageBlock.classList.add('error-message-block');
-  messageText.classList.add('error-message-text');
-  button.classList.add('error-button-close');
-
-  messageText.innerText = message;
-  button.innerText = "Ok";
-
-  const styles = includeCSS('../utils/errorModal.css');
-
-  backdrop.addEventListener('click', (event) => {
-    if (event.target.nodeName === 'BUTTON' || event.target.nodeName === 'ARTICLE') {
-      document.body.removeChild(backdrop);
-      document.head.removeChild(styles);
-    }
-  });
-
-  messageBlock.appendChild(messageText);
-  messageBlock.appendChild(button);
-  backdrop.appendChild(messageBlock);
-  document.body.appendChild(backdrop);
-}
-
-/**
- * Create notification modal and display it with message. Delete DOM element after closing.
- * @param {String} message 
- */
-export function showNotification(message = 'Notification') {
-  const notificationBlock = document.createElement('div');
-  const messageText = document.createElement('p');
-  const button = document.createElement('button');
-
-  notificationBlock.classList.add('notif-block');
-  messageText.classList.add('notif-message');
-  button.classList.add('notif-btn-close');
-
-  const style = includeCSS('../utils/notificationModal.css');
-
-  messageText.innerText = message;
-  button.innerText = "Ok";
-
-  notificationBlock.appendChild(messageText);
-  notificationBlock.appendChild(button);
-  document.body.appendChild(notificationBlock);
-
-  /**
-   * I added setTimeout during closing because class 'notif-block-closed' use animation with duration 1 second.
-   * So, I need to wait until animation will end and delete element after that.
-   */
-  const closeTimer = setTimeout(() => {
-    notificationBlock.classList.add('notif-block-closed');
-    setTimeout(() => {
-      document.body.removeChild(notificationBlock)
-      document.head.removeChild(style);
-    }, 1000);
-  }, 5000);
-
-  button.addEventListener('click', (event) => {
-    if (closeTimer) {
-      clearTimeout(closeTimer);
-    }
-    notificationBlock.classList.add('notif-block-closed');
-    setTimeout(() => {
-      document.body.removeChild(notificationBlock)
-      document.head.removeChild(style);
-    }, 1000);
-  });
-}
+const axios = require('axios');
 
 /**
  * Helping function to create params string for GET query
@@ -151,4 +72,24 @@ function includeCSS(file){
   document.head.appendChild(style);
 
   return style;
+}
+
+export function doAxiosRequest({method, url, json}) {
+  const options = {
+    'method': method,
+    'url': url,
+		'headers': {
+      'Content-type': 'application/json',
+      'Authorization': `Bearer${getToken()}`
+    }
+  }
+  if (json) {
+    options['data'] = json;
+  }
+  return axios(options);
+}
+
+export function getToken() {
+  const token = window.localStorage.getItem('token');
+  return token;
 }

@@ -1,4 +1,5 @@
-import { getCars, deleteCar } from '@/api/cars-service-xhr.js';
+import { getCars, deleteCar } from '@/api/cars-service.js';
+import { preventXSS } from '@/utils/utilities.js';
 
 export default {
 	name: 'TableCars',
@@ -23,6 +24,9 @@ export default {
 			tempKeyword: '',
 		}
 	},
+	computed: {
+		
+	},
 	created: function() {
 		searchCars.apply(this);
 	},
@@ -33,7 +37,9 @@ export default {
 		switchPage: switchPage,
 		sortCars: sortCars,
 		deleteRow: deleteRow,
-		passToEditCar: passToEditCar
+		passToEditCar: passToEditCar,
+		passToAddCar: passToAddCar,
+		preventXSS,
 	}
 }
 
@@ -167,6 +173,10 @@ async function deleteRow() {
 
 function passToEditCar() {
 	if (this.selectedCar.id) {
-		this.$router.push('form');
+		this.$router.push(`form/${this.selectedCar.id}`);
 	}
+}
+
+function passToAddCar() {
+	this.$router.push('form');
 }
