@@ -1,0 +1,59 @@
+@keyframes show{
+	0%{
+		opacity: 0;
+	}
+	
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes close{
+	0%{
+		opacity: 1;
+	}
+	100%{
+		opacity: 0;
+	}
+}
+
+.notif-block {
+	width: 12%;
+	min-width: 200px;
+	background: rgb(130, 84, 255);
+	height: 300px;
+	display:flex; 
+	flex-direction: column; 
+	justify-content: space-around; 
+	position: fixed; 
+	bottom: 5vh; 
+	right: 2vw;
+	opacity:0; 
+	transition: 1s; 
+	animation: show 1s 1; 
+	animation-fill-mode: forwards;                           
+}
+
+.notif-block-closed {
+	animation: close 1s 1;
+	animation-fill-mode: forwards;
+	transition: 1s;
+	opacity: 1;
+}
+
+.notif-message {
+	padding: 1em;
+	color: white;
+}
+
+.notif-btn-close {
+	width: 35%;
+	background: inherit;
+	border: 1.5px solid white;
+	padding: 0.25em 0.75em;
+	min-width: 100px;
+	cursor: pointer;
+	align-self: center;
+	outline: 0px;
+	color: white;
+}
