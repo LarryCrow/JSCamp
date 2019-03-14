@@ -20,7 +20,8 @@ Vue.component('notif-modal', NotificationModal);
 const routes = [
   { path: '/table', component: TableCars },
   { path: '/form*', component: FormCars },
-  { path: '/auth', component: Auth}
+  { path: '/auth', component: Auth},
+  { path: '*', redirect: '/table' }
 ]
 
 const router = new VueRouter({
