@@ -1,5 +1,5 @@
-const axios = require('axios');
 const baseURL = 'https://backend-jscamp.saritasa-hosting.com';
+import { doAxiosRequest } from '../utils/utilities.js';
 
 
 /**
