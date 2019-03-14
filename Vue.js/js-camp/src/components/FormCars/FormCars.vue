@@ -9,7 +9,7 @@
           <select required v-model="form.make_id" class="input item-select">
             <option disabled value selected></option>
             <option v-for="make in makers" :key="make.id" :value="make.id">
-              {{make.name}}
+              {{preventXSS(make.name)}}
             </option>
           </select>
         </label>
@@ -18,7 +18,7 @@
           <select required v-model="form.car_model_id" class="input item-select">
             <option disabled value selected></option>
             <option v-for="model in make_models" :key="model.id" :value="model.id">
-              {{model.name}}
+              {{preventXSS(model.name)}}
             </option>
           </select>
         </label>
@@ -27,7 +27,7 @@
           <select required v-model="form.body_type_id" class="input item-select">
             <option disabled value selected></option>
             <option v-for="body in bodies" :key="body.id" :value="body.id">
-              {{body.name}}
+              {{preventXSS(body.name)}}
             </option>
           </select>
         </label>
@@ -57,4 +57,4 @@
   </div>
 </template>
 <script src="./form-cars.js"></script>
-<style src="./form-cars.css"></style>
+<style computed src="./form-cars.css"></style>

@@ -22,27 +22,32 @@ export default {
 			pageState: {currentPage: null, totalPages: null, keyword: '', pages: []},
 			sortingState: {sortField: '', orderType: '', sortCol: null},
 			tempKeyword: '',
+			errorModal: {isShow: false, message: ''}
 		}
-	},
-	computed: {
-		
 	},
 	created: function() {
 		searchCars.apply(this);
 	},
 	methods: {
-		searchCars: searchCars,
-		selectRow: selectRow,
-		setPaginatatorValues: setPaginatatorValues,
-		switchPage: switchPage,
-		sortCars: sortCars,
-		deleteRow: deleteRow,
-		passToEditCar: passToEditCar,
-		passToAddCar: passToAddCar,
+		searchCars,
+		selectRow,
+		setPaginatatorValues,
+		switchPage,
+		sortCars,
+		deleteRow,
+		passToEditCar,
 		preventXSS,
+		passToAddCar: function() { this.$router.push('form'); },
 	}
 }
 
+
+/**
+ * Call function for getting cars from the server.
+ *
+ * @param {Object} param0 Object of the for {page, keyword, sortField, orderType}
+ * @return {Boolean} True - if data were got, false - if not
+ */
 async function searchCars({
 	page = this.pageState.currentPage,
 	keyword = this.pageState.keyword,
@@ -65,12 +70,20 @@ async function searchCars({
 		}
 		throw new Error('No results. Please, change filters values');
 	} catch (ex) {
-		// showErrorModal(ex);
-		console.log(ex);
+		if (ex.message === 'Unauthorized') {
+			this.$router.push('auth');
+		}
+		this.errorModal = { isShow: true, message: ex};
 		return false;
 	}
 }
 
+/**
+ * Select or unselect table's row. Change toolbar state.
+ * 
+ * @param {MouseEvent} event Event received by clicking on the table row
+ * @param {Object} car Car object for getting it's id
+ */
 function selectRow(event, car) {
 	this.$store.test;
 	if (this.selectedCar.row !== null) {
@@ -84,6 +97,9 @@ function selectRow(event, car) {
 	this.selectedCar.row.classList.add('selected-car');
 }
 
+/**
+ * Changes text when switching buttons or hide depending on the number of pages.
+ */
 function setPaginatatorValues(paginator) {
 	if (paginator.total_pages === 1) {
 		this.pageState.pages = ['...', 1, '...'];
@@ -98,6 +114,11 @@ function setPaginatatorValues(paginator) {
 	this.pageState.totalPages = paginator.total_pages;
 }
 
+/**
+ * Switch page in paginator.
+ *
+ * @param {MouseEvent} event Event received by clicking on the paginator.
+ */
 function switchPage(event) {
 	const target = event.target.nodeName === 'I' ? event.target.parentElement : event.target;
 	let page;
@@ -118,6 +139,13 @@ function switchPage(event) {
 	searchCars.apply(this, [{page: page}]);
 }
 
+/**
+ * Sort table depending on field and order. Call update table method.
+ * 
+ * @param {MouseEvent} event Event received by clicking on the sort button
+ * @param {String} fieldName Field title for sending at the server
+ * @param {String} orderType Sorting type for sending at the server
+ */
 async function sortCars(event, fieldName, orderType) {
 	if (this.cars.length === 0) {
     return;
@@ -154,29 +182,35 @@ async function sortCars(event, fieldName, orderType) {
       this.sortingState.orderType = params.orderType;
     }
   } catch (ex) {
-		// showErrorModal(ex);
-		console.log(ex);
+		if (ex.message === 'Unauthorized') {
+			this.$router.push('auth');
+		}
+		this.errorModal = { isShow: true, message: ex};
   }
 }
 
+/**
+ * Delete selected row and update table.
+ */
 async function deleteRow() {
 	if (this.selectedCar.row !== null) {
 		try {
       await deleteCar(this.selectedCar.id);
       searchCars.apply(this);
     } catch (ex) {
-			// showErrorModal(ex);
-			console.log(ex);
+			if (ex.message === 'Unauthorized') {
+				this.$router.push('auth');
+			}
+			this.errorModal = { isShow: true, message: ex};
     }
 	}
 }
 
+/**
+ * Open edit window
+ */
 function passToEditCar() {
 	if (this.selectedCar.id) {
 		this.$router.push(`form/${this.selectedCar.id}`);
 	}
-}
-
-function passToAddCar() {
-	this.$router.push('form');
 }

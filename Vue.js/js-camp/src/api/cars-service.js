@@ -22,6 +22,8 @@ export function getCars(params) {
     .catch((e) => {
       if (e.response.status === 503) {
         return getCars(params);
+      } else if (e.response.status === 401) {
+        throw new Error('Unauthorized');
       }
       throw new Error(e.message);
     });
@@ -45,13 +47,15 @@ export function addCar(form) {
     }
   }
 
-  return doAxiosRequest({'method': 'POST', 'url': url, 'json': body})
+  return doAxiosRequest({'method': 'POST', 'url': url, 'body': body})
     .then((response) => {
       return response.data;
     })
     .catch((e) => {
       if (e.response.status === 503) {
         return addCar(form);
+      } else if (e.response.status === 401) {
+        throw new Error('Unauthorized');
       }
       new Error(e.message);
     });
@@ -75,13 +79,15 @@ export function editCar(form, id) {
     }
   }
 
-  return doAxiosRequest({'method': 'PUT', 'url': url, 'json': body})
+  return doAxiosRequest({'method': 'PUT', 'url': url, 'body': body})
     .then((response) => {
       return response.data;
     })
     .catch((e) => {
       if (e.response.status === 503) {
         return editCar(form, id);
+      } else if (e.response.status === 401) {
+        throw new Error('Unauthorized');
       }
       throw new Error(e.message);
     });
@@ -100,6 +106,8 @@ export async function deleteCar(id) {
   } catch (ex) {
     if (ex.response.status === 503) {
       return deleteCar(id);
+    } else if (e.response.status === 401) {
+      throw new Error('Unauthorized');
     }
     throw new Error(ex);
   }
@@ -120,6 +128,8 @@ export function getCar(id) {
     .catch((e) => {
       if (e.response.status === 503) {
         return getCar(id);
+      } else if (e.response.status === 401) {
+        throw new Error('Unauthorized');
       }
       throw new Error(e.message);
     });
@@ -137,6 +147,8 @@ export function getMakes() {
     .catch((e) => {
       if (e.response.status === 503) {
         return getMakes();
+      } else if (e.response.status === 401) {
+        throw new Error('Unauthorized');
       }
       throw new Error(e.message);
     });
@@ -156,6 +168,8 @@ export function getMakerModels(makes_id) {
     .catch((e) => {
       if (e.response.status === 503) {
         return getMakerModels(makes_id);
+      } else if (e.response.status === 401) {
+        throw new Error('Unauthorized');
       }
       throw new Error(e.message);
     });
@@ -174,6 +188,8 @@ export function getBodyTypes() {
     .catch((e) => {
       if (e.response.status === 503) {
         return getBodyTypes();
+      } else if (e.response.status === 401) {
+        throw new Error('Unauthorized');
       }
       throw new Error(e.message);
     });

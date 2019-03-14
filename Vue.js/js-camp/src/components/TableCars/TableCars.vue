@@ -93,7 +93,11 @@
         </tbody>
       </table>
     </div>
+
+
+    <!-- Modal windows -->
+    <error-modal :message="errorModal.message" v-if="errorModal.isShow" @close="errorModal.isShow = false"></error-modal>
   </div>
 </template>
 <script src="./table-cars.js"></script>
-<style src="./table-cars.css"></style>
+<style computed src="./table-cars.css"></style>

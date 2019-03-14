@@ -28,25 +28,38 @@ export default {
 		}
 	},
 	created: async function () {
-		const data = await Promise.all([getMakes(), getBodyTypes()]);
-		this.makers = data[0].results;
-		this.bodies = data[1].results;
-		getSelectedCar.apply(this);
+		try {
+			const data = await Promise.all([getMakes(), getBodyTypes()]);
+			this.makers = data[0].results;
+			this.bodies = data[1].results;
+			getSelectedCar.apply(this);
+		} catch (ex) {
+			if (ex.message === 'Unauthorized') {
+				this.$router.push('auth');
+			}
+			this.errorModal = { isShow: true, message: ex };
+		}
 	},
 	watch: {
 		'form.make_id': async function (make_id) {
-			console.log(make_id);
-			console.log('123');
 			if (make_id !== null) {
-				const models = await getMakerModels(make_id);
-				this.make_models = models.results;
+				try {
+					const models = await getMakerModels(make_id);
+					this.make_models = models.results;
+				} catch (ex) {
+					if (ex.message === 'Unauthorized') {
+						this.$router.push('auth');
+					}
+					this.errorModal = { isShow: true, message: ex };
+				}
 			} else {
 				this.make_models = [];
 			}
 		}
 	},
 	methods: {
-		saveCar: saveCar
+		saveCar,
+		preventXSS
 	}
 }
 
@@ -67,11 +80,16 @@ async function getSelectedCar() {
 			}
 		}
 	} catch (ex) {
-		// showErrorModal(ex);
+		if (ex.message === 'Unauthorized') {
+			this.$router.push('auth');
+		}
+		this.errorModal = { isShow: true, message: ex };
 	}
 }
 
-
+/**
+ * Save car
+ */
 async function saveCar() {
 	try {
 		if (this.car_id === null) {
@@ -86,6 +104,9 @@ async function saveCar() {
 			}
 		}
 	} catch (ex) {
+		if (ex.message === 'Unauthorized') {
+			this.$router.push('auth');
+		}
 		this.errorModal = { isShow: true, message: ex };
 	}
 }

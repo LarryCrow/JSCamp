@@ -9,6 +9,9 @@ export default {
 			isClosing: false
 		}
 	},
+	/**
+	 * Sets timer for 5 seconds and close modal after that
+	 */
 	created: function(){
 		this.closeTimer = setTimeout(() => {
 			this.isClosing = true;
@@ -18,6 +21,9 @@ export default {
 		}, 5000);
 	},
 	methods: {
+		/**
+		 * Close modal after click at the button
+		 */
 		closeModal: function() {
 			if (this.closeTimer) {
 				clearTimeout(this.closeTimer);

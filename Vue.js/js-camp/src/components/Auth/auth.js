@@ -10,6 +10,10 @@ export default {
 				isShow: false,
 				message: ''
 			},
+			notificationModal: {
+				isShow: false,
+				message: ''
+			},
 			login: '',
 			pass: ''
 		}
@@ -20,15 +24,18 @@ export default {
 	}
 }
 
+/**
+ * Authorizes user and saves token
+ */
 async function signIn() {
 	try {
 		const res = await logIn({ 'email': this.login, 'password': this.pass });
 		if (res.token) {
 			window.localStorage.setItem('token', res.token);
 			this.setToken({ token: res.token });
+			this.notificationModal = { isShow: true, message: 'You are logged in' };
 		}
 	} catch (ex) {
-		// this.errorModal = { isShow: true, message: ex };
-		console.log(ex);
+		this.errorModal = { isShow: true, message: ex };
 	}
 }

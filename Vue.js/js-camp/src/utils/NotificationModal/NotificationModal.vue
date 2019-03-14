@@ -5,4 +5,4 @@
   </div>
 </template>
 <script src="./notification-modal.js"></script>
-<style src="./notification-modal.css"></style>
+<style computed src="./notification-modal.css"></style>

@@ -7,4 +7,4 @@
   </div>
 </template>
 <script src="./error-modal.js"></script>
-<style src="./error-modal.css"></style>
+<style computed src="./error-modal.css"></style>

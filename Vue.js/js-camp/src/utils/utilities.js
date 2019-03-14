@@ -32,49 +32,12 @@ export function preventXSS(str) {
   return p.innerHTML;
 }
 
-/**
- * Do request with specified params
- * 
- * @param {String} reqMethod 
- * @param {String} url 
- * @param {Number} successfulStatus 
- * @param {Function} resolve 
- * @param {Function} reject 
- * @param {Object} json
- */
-export function doXhrRequest(reqMethod, url, successfulStatus, resolve, reject, json) {
-  const xhr = new XMLHttpRequest();
-
-  xhr.onload = xhr.onerror = function () {
-    if (xhr.status === successfulStatus) {
-      resolve(xhr.response);
-    } else {
-      reject(xhr);
-    }
-  };
-
-  xhr.open(reqMethod, url);
-  if (reqMethod === 'POST' || reqMethod === 'PUT') {
-    xhr.setRequestHeader("Content-Type", "application/json");
-  }
-  xhr.send(json);
-}
 
 /**
- * An auxiliary function that connects a CSS file for a modal window that calls it
  * 
- * @param {String} file Path to file
+ * @param {Object} param0 Object of the form {method: '', url: '', body: {}}
  */
-function includeCSS(file){
-  const style = document.createElement('link');
-  style.href = file;
-  style.rel = 'stylesheet';
-  document.head.appendChild(style);
-
-  return style;
-}
-
-export function doAxiosRequest({method, url, json}) {
+export function doAxiosRequest({method, url, body}) {
   const options = {
     'method': method,
     'url': url,
@@ -83,12 +46,16 @@ export function doAxiosRequest({method, url, json}) {
       'Authorization': `Bearer${getToken()}`
     }
   }
-  if (json) {
-    options['data'] = json;
+  if (body) {
+    options['data'] = body;
   }
   return axios(options);
 }
 
+/**
+ * Gets token from localStorage
+ * @returns {String} token User's token
+ */
 export function getToken() {
   const token = window.localStorage.getItem('token');
   return token;
