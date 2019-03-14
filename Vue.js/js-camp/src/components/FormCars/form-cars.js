@@ -27,6 +27,9 @@ export default {
 			}
 		}
 	},
+	/**
+	 * Gets makers and body types.
+	 */
 	created: async function () {
 		try {
 			const data = await Promise.all([getMakes(), getBodyTypes()]);
@@ -64,7 +67,7 @@ export default {
 }
 
 /**
- * Get car which was selected in the table
+ * Get car which was selected in the table.
  */
 async function getSelectedCar() {
 	const car_id_str = document.URL.substr(document.URL.lastIndexOf('/') + 1);
@@ -88,7 +91,7 @@ async function getSelectedCar() {
 }
 
 /**
- * Save car
+ * Save car.
  */
 async function saveCar() {
 	try {

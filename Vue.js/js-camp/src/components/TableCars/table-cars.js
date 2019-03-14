@@ -37,6 +37,9 @@ export default {
 		deleteRow,
 		passToEditCar,
 		preventXSS,
+		/**
+		 * Open the form page to add a new car.
+		 */
 		passToAddCar: function () { this.$router.push('form'); },
 	}
 }
@@ -46,6 +49,10 @@ export default {
  * Call function for getting cars from the server.
  *
  * @param {Object} param0 Object of the for {page, keyword, sortField, orderType}
+ * @param {string} param0.page - Number of needed page
+ * @param {string} param0.keyword - phrase for filter
+ * @param {string} param0.order_by - Field name which will be used to sort
+ * @param {string} param0.sort_order - 'asc' or 'desc' for ascending or descending sorting
  * @return {Boolean} True - if data were got, false - if not
  */
 async function searchCars({
@@ -65,7 +72,7 @@ async function searchCars({
 		if (resultCars.results && resultCars.results.length > 0) {
 			this.cars = resultCars.results;
 			this.pageState.keyword = keyword;
-			setPaginatatorValues.apply(this, [resultCars.pagination]);
+			setPaginatatorValues.apply(this, [resultCars.pagination.current_page, resultCars.pagination.total_pages]);
 			return true;
 		}
 		throw new Error('No results. Please, change filters values');
@@ -81,43 +88,45 @@ async function searchCars({
 /**
  * Select or unselect table's row. Change toolbar state.
  * 
- * @param {MouseEvent} event Event received by clicking on the table row
- * @param {Object} car Car object for getting it's id
+ * @param {MouseEvent} event - Event received by clicking on the table row.
+ * @param {string} car_id - Car's id.
  */
-function selectRow(event, car) {
+function selectRow(event, car_id) {
 	this.$store.test;
 	if (this.selectedCar.row !== null) {
 		this.selectedCar.row.classList.remove('selected-car');
-		if (this.selectedCar.id === car.id) {
+		if (this.selectedCar.id === car_id) {
 			this.selectedCar = { id: '', row: null }
 			return;
 		}
 	}
-	this.selectedCar = { id: car.id, row: event.currentTarget }
+	this.selectedCar = { id: car_id, row: event.currentTarget }
 	this.selectedCar.row.classList.add('selected-car');
 }
 
 /**
  * Changes text when switching buttons or hide depending on the number of pages.
+ * @param {string} curPage - A page which user has passed on.
+ * @param {string} totalPages - An amount of pages.
  */
-function setPaginatatorValues(paginator) {
-	if (paginator.total_pages === 1) {
+function setPaginatatorValues(curPage, totalPages) {
+	if (totalPages === 1) {
 		this.pageState.pages = ['...', 1, '...'];
-	} else if (paginator.current_page === 1) {
-		this.pageState.pages = ['...', paginator.current_page, paginator.current_page + 1];
-	} else if (paginator.current_page === paginator.total_pages) {
-		this.pageState.pages = [paginator.current_page - 1, paginator.current_page, '...'];
+	} else if (curPage === 1) {
+		this.pageState.pages = ['...', curPage, curPage + 1];
+	} else if (curPage === totalPages) {
+		this.pageState.pages = [curPage - 1, curPage, '...'];
 	} else {
-		this.pageState.pages = [paginator.current_page - 1, paginator.current_page, paginator.current_page + 1];
+		this.pageState.pages = [curPage - 1, curPage, curPage + 1];
 	}
-	this.pageState.currentPage = paginator.current_page;
-	this.pageState.totalPages = paginator.total_pages;
+	this.pageState.currentPage = curPage;
+	this.pageState.totalPages = totalPages;
 }
 
 /**
  * Switch page in paginator.
  *
- * @param {MouseEvent} event Event received by clicking on the paginator.
+ * @param {MouseEvent} event - Event received by clicking on the paginator.
  */
 function switchPage(event) {
 	const target = event.target.nodeName === 'I' ? event.target.parentElement : event.target;
@@ -142,9 +151,9 @@ function switchPage(event) {
 /**
  * Sort table depending on field and order. Call update table method.
  * 
- * @param {MouseEvent} event Event received by clicking on the sort button
- * @param {String} fieldName Field title for sending at the server
- * @param {String} orderType Sorting type for sending at the server
+ * @param {MouseEvent} event - Event received by clicking on the sort button.
+ * @param {string} fieldName - Field title for sending at the server.
+ * @param {string} orderType - Sorting type for sending at the server.
  */
 async function sortCars(event, fieldName, orderType) {
 	if (this.cars.length === 0) {
@@ -207,7 +216,7 @@ async function deleteRow() {
 }
 
 /**
- * Open edit window
+ * Open the form page to edit.
  */
 function passToEditCar() {
 	if (this.selectedCar.id) {

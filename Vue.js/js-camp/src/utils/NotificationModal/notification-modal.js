@@ -10,7 +10,7 @@ export default {
 		}
 	},
 	/**
-	 * Sets timer for 5 seconds and close modal after that
+	 * Sets timer for 5 seconds and close modal after that.
 	 */
 	created: function(){
 		this.closeTimer = setTimeout(() => {
@@ -22,7 +22,7 @@ export default {
 	},
 	methods: {
 		/**
-		 * Close modal after click at the button
+		 * Close modal windows after the mouse click.
 		 */
 		closeModal: function() {
 			if (this.closeTimer) {

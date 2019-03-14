@@ -79,7 +79,7 @@
             class="tb-row"
             v-for="car in cars"
             :key="car.id"
-            @click="selectRow($event, car)"
+            @click="selectRow($event, car.id)"
           >
             <td class="td-truncated" :title="car.car_make.name">{{preventXSS(car.car_make.name)}}</td>
             <td class="td-truncated" :title="car.car_model.name">{{preventXSS(car.car_model.name)}}</td>

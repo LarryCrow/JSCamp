@@ -4,6 +4,9 @@ export default {
 		message: String
 	},
 	methods: {
+		/**
+		 * Close modal windows after the mouse click.
+		 */
 		closeModal: function() {
 			this.$emit('close')
 		}

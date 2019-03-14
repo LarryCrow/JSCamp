@@ -3,10 +3,10 @@ export * from './utilities.js';
 const axios = require('axios');
 
 /**
- * Helping function to create params string for GET query
+ * Helping function to create params string for GET query.
  * 
- * @param {Object} params Object is used for construction
- * @return {URLSearchParams} Object with ready url params 
+ * @param {Object} params Object is used for construction URL params.
+ * @return {URLSearchParams} An instance of URLSearchParams with ready URL params.
  */
 export function createURLParams(params) {
   const urlParams = new URLSearchParams();
@@ -20,10 +20,10 @@ export function createURLParams(params) {
 
 
 /**
- * Check string using regex and prevent XSS attacks
+ * Check string using regex and prevent XSS attacks.
  * 
- * @param {String} str String for checking 
- * @return {String} String withous <script> tags
+ * @param {string} str - String for checking.
+ * @return {string} String withous <script> tags.
  */
 export function preventXSS(str) {
   var text = document.createTextNode(str);
@@ -34,14 +34,20 @@ export function preventXSS(str) {
 
 
 /**
+ * Wrapper-function for making axios request.
  * 
- * @param {Object} param0 Object of the form {method: '', url: '', body: {}}
+ * @property {Object} param0
+ * @property {string} param0.method - Request method.
+ * @property {string} param0.url - Address for request.
+ * @property {object} param0.body - Object with data which we want to send to the server.
+ * @property {function} param0.callback - Function which should be called after 503 error.
+ * @returns {Object} Returns object with data depending on were called a function
  */
-export function doAxiosRequest({method, url, body, callback}) {
+export function doAxiosRequest({ method, url, body, callback }) {
   const options = {
     'method': method,
     'url': url,
-		'headers': {
+    'headers': {
       'Content-type': 'application/json',
       'Authorization': `Bearer${getToken()}`
     }
@@ -63,9 +69,11 @@ export function doAxiosRequest({method, url, body, callback}) {
     });
 }
 
+
 /**
- * Gets token from localStorage
- * @returns {String} token User's token
+ * Gets token from localStorage.
+ * 
+ * @returns {string} token user's token
  */
 export function getToken() {
   const token = window.localStorage.getItem('token');
