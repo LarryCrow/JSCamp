@@ -37,7 +37,7 @@ export function preventXSS(str) {
  * 
  * @param {Object} param0 Object of the form {method: '', url: '', body: {}}
  */
-export function doAxiosRequest({method, url, body}) {
+export function doAxiosRequest({method, url, body, callback}) {
   const options = {
     'method': method,
     'url': url,
@@ -49,7 +49,18 @@ export function doAxiosRequest({method, url, body}) {
   if (body) {
     options['data'] = body;
   }
-  return axios(options);
+  return axios(options)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((e) => {
+      if (e.response.status === 503) {
+        return callback();
+      } else if (e.response.status === 401) {
+        throw new Error('Unauthorized');
+      }
+      throw new Error(e.message);
+    });
 }
 
 /**

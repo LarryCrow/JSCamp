@@ -18,14 +18,14 @@ export default {
 				{ prop: 'created_at', title: 'Created at', style: 'width: 13%' },
 				{ prop: 'updated_at', title: 'Updatet at', style: 'width: 13%' }
 			],
-			selectedCar: {id: '0', row: null},
-			pageState: {currentPage: null, totalPages: null, keyword: '', pages: []},
-			sortingState: {sortField: '', orderType: '', sortCol: null},
+			selectedCar: { id: '0', row: null },
+			pageState: { currentPage: null, totalPages: null, keyword: '', pages: [] },
+			sortingState: { sortField: '', orderType: '', sortCol: null },
 			tempKeyword: '',
-			errorModal: {isShow: false, message: ''}
+			errorModal: { isShow: false, message: '' }
 		}
 	},
-	created: function() {
+	created: function () {
 		searchCars.apply(this);
 	},
 	methods: {
@@ -37,7 +37,7 @@ export default {
 		deleteRow,
 		passToEditCar,
 		preventXSS,
-		passToAddCar: function() { this.$router.push('form'); },
+		passToAddCar: function () { this.$router.push('form'); },
 	}
 }
 
@@ -54,10 +54,10 @@ async function searchCars({
 	sortField = this.sortingState.sortField,
 	orderType = this.sortingState.orderType } = {}) {
 	const queryParam = {
-	  'page': page || '',
-	  'keyword': keyword || '',
-	  'order_by': sortField || '',
-	  'sort_order': orderType || ''
+		'page': page || '',
+		'keyword': keyword || '',
+		'order_by': sortField || '',
+		'sort_order': orderType || ''
 	}
 
 	try {
@@ -73,7 +73,7 @@ async function searchCars({
 		if (ex.message === 'Unauthorized') {
 			this.$router.push('auth');
 		}
-		this.errorModal = { isShow: true, message: ex};
+		this.errorModal = { isShow: true, message: ex };
 		return false;
 	}
 }
@@ -89,11 +89,11 @@ function selectRow(event, car) {
 	if (this.selectedCar.row !== null) {
 		this.selectedCar.row.classList.remove('selected-car');
 		if (this.selectedCar.id === car.id) {
-			this.selectedCar = {id: '', row: null}
+			this.selectedCar = { id: '', row: null }
 			return;
 		}
 	}
-	this.selectedCar = {id: car.id, row: event.currentTarget}
+	this.selectedCar = { id: car.id, row: event.currentTarget }
 	this.selectedCar.row.classList.add('selected-car');
 }
 
@@ -123,20 +123,20 @@ function switchPage(event) {
 	const target = event.target.nodeName === 'I' ? event.target.parentElement : event.target;
 	let page;
 	if (!target.previousElementSibling) {
-    // to the first page
-    if (this.pageState.currentPage !== 1) page = 1; 
-    else return;
+		// to the first page
+		if (this.pageState.currentPage !== 1) page = 1;
+		else return;
 
-  } else if (!target.nextElementSibling) {
-    // to the last page
-    if (this.pageState.currentPage !== this.pageState.totalPages) page = this.pageState.totalPages;
-    else return;
-  } else {
-    page = parseInt(target.innerText, 10);
-    if (page === this.pageState.currentPage || !page) return;
+	} else if (!target.nextElementSibling) {
+		// to the last page
+		if (this.pageState.currentPage !== this.pageState.totalPages) page = this.pageState.totalPages;
+		else return;
+	} else {
+		page = parseInt(target.innerText, 10);
+		if (page === this.pageState.currentPage || !page) return;
 	}
 
-	searchCars.apply(this, [{page: page}]);
+	searchCars.apply(this, [{ page: page }]);
 }
 
 /**
@@ -148,45 +148,45 @@ function switchPage(event) {
  */
 async function sortCars(event, fieldName, orderType) {
 	if (this.cars.length === 0) {
-    return;
-  }
-
-  const params = {
-    'page': '' 
+		return;
 	}
-	
-  if (this.sortingState.sortCol !== event.target) {
-    params.sortField = fieldName;
+
+	const params = {
+		'page': ''
+	}
+
+	if (this.sortingState.sortCol !== event.target) {
+		params.sortField = fieldName;
 		params.orderType = orderType;
-  } else {
+	} else {
 		params.sortField = '';
 		params.orderType = '';
 	}
-  
-  try {
-    const isTableUpdated = await searchCars.apply(this, [params]);
-    if (isTableUpdated) {
 
-      if (!this.sortingState.sortCol || this.sortingState.sortCol !== event.target) {
-        if (this.sortingState.sortCol) {
-          this.sortingState.sortCol.classList.remove('selected-sort');
-        }
-        this.sortingState.sortCol = event.target;
-        this.sortingState.sortCol.classList.add('selected-sort');
-      } else {
+	try {
+		const isTableUpdated = await searchCars.apply(this, [params]);
+		if (isTableUpdated) {
+
+			if (!this.sortingState.sortCol || this.sortingState.sortCol !== event.target) {
+				if (this.sortingState.sortCol) {
+					this.sortingState.sortCol.classList.remove('selected-sort');
+				}
+				this.sortingState.sortCol = event.target;
+				this.sortingState.sortCol.classList.add('selected-sort');
+			} else {
 				this.sortingState.sortCol.classList.remove('selected-sort');
-        this.sortingState.sortCol = null;
-      }
+				this.sortingState.sortCol = null;
+			}
 
-      this.sortingState.sortField = params.sortField;
-      this.sortingState.orderType = params.orderType;
-    }
-  } catch (ex) {
+			this.sortingState.sortField = params.sortField;
+			this.sortingState.orderType = params.orderType;
+		}
+	} catch (ex) {
 		if (ex.message === 'Unauthorized') {
 			this.$router.push('auth');
 		}
-		this.errorModal = { isShow: true, message: ex};
-  }
+		this.errorModal = { isShow: true, message: ex };
+	}
 }
 
 /**
@@ -195,14 +195,14 @@ async function sortCars(event, fieldName, orderType) {
 async function deleteRow() {
 	if (this.selectedCar.row !== null) {
 		try {
-      await deleteCar(this.selectedCar.id);
-      searchCars.apply(this);
-    } catch (ex) {
+			await deleteCar(this.selectedCar.id);
+			searchCars.apply(this);
+		} catch (ex) {
 			if (ex.message === 'Unauthorized') {
 				this.$router.push('auth');
 			}
-			this.errorModal = { isShow: true, message: ex};
-    }
+			this.errorModal = { isShow: true, message: ex };
+		}
 	}
 }
 

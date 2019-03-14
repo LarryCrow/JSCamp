@@ -1,7 +1,6 @@
 export * from './cars-service.js';
 import { preventXSS, createURLParams, doAxiosRequest } from '../utils/utilities.js';
 
-const axios = require('axios');
 const baseURL = 'https://backend-jscamp.saritasa-hosting.com';
 
 /**
@@ -15,18 +14,11 @@ export function getCars(params) {
   const urlParams = createURLParams(params);
   const url = new URL(`/api/with-auth/cars?${urlParams}`, baseURL);
 
-  return doAxiosRequest({'method': 'GET', 'url': url})
-    .then((response) => {
-      return response.data;
-    })
-    .catch((e) => {
-      if (e.response.status === 503) {
-        return getCars(params);
-      } else if (e.response.status === 401) {
-        throw new Error('Unauthorized');
-      }
-      throw new Error(e.message);
-    });
+  return doAxiosRequest({
+    'method': 'GET',
+    'url': url,
+    'callback': () => getCars(params)
+  });
 }
 
 /**
@@ -47,18 +39,12 @@ export function addCar(form) {
     }
   }
 
-  return doAxiosRequest({'method': 'POST', 'url': url, 'body': body})
-    .then((response) => {
-      return response.data;
-    })
-    .catch((e) => {
-      if (e.response.status === 503) {
-        return addCar(form);
-      } else if (e.response.status === 401) {
-        throw new Error('Unauthorized');
-      }
-      new Error(e.message);
-    });
+  return doAxiosRequest({
+    'method': 'POST',
+    'url': url,
+    'body': body,
+    'callback': () => addCar(form)
+  });
 }
 
 /**
@@ -79,18 +65,12 @@ export function editCar(form, id) {
     }
   }
 
-  return doAxiosRequest({'method': 'PUT', 'url': url, 'body': body})
-    .then((response) => {
-      return response.data;
-    })
-    .catch((e) => {
-      if (e.response.status === 503) {
-        return editCar(form, id);
-      } else if (e.response.status === 401) {
-        throw new Error('Unauthorized');
-      }
-      throw new Error(e.message);
-    });
+  return doAxiosRequest({
+    'method': 'PUT',
+    'url': url,
+    'body': body,
+    'callback': () => editCar(form, id)
+  });
 }
 
 /**
@@ -100,17 +80,12 @@ export function editCar(form, id) {
  */
 export async function deleteCar(id) {
   const url = new URL(`/api/with-auth/cars/${id}`, baseURL);
-  try {
-    await doAxiosRequest({'method': 'DELETE', 'url': url})
-    return true;
-  } catch (ex) {
-    if (ex.response.status === 503) {
-      return deleteCar(id);
-    } else if (e.response.status === 401) {
-      throw new Error('Unauthorized');
-    }
-    throw new Error(ex);
-  }
+
+  return doAxiosRequest({
+    'method': 'DELETE',
+    'url': url,
+    'callback': () => deleteCar(id)
+  });
 }
 
 /**
@@ -121,18 +96,11 @@ export async function deleteCar(id) {
  */
 export function getCar(id) {
   const url = new URL(`/api/with-auth/cars/${id}`, baseURL);
-  return doAxiosRequest({'method': 'GET', 'url': url})
-    .then((response) => {
-      return response.data;
-    })
-    .catch((e) => {
-      if (e.response.status === 503) {
-        return getCar(id);
-      } else if (e.response.status === 401) {
-        throw new Error('Unauthorized');
-      }
-      throw new Error(e.message);
-    });
+  return doAxiosRequest({
+    'method': 'GET',
+    'url': url,
+    'callback': () => getCar(id)
+  });
 }
 
 /**
@@ -140,18 +108,11 @@ export function getCar(id) {
  */
 export function getMakes() {
   const url = new URL(`/api/dictionaries/makes`, baseURL);
-  return axios.get(url)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((e) => {
-      if (e.response.status === 503) {
-        return getMakes();
-      } else if (e.response.status === 401) {
-        throw new Error('Unauthorized');
-      }
-      throw new Error(e.message);
-    });
+  return doAxiosRequest({
+    'method': 'GET',
+    'url': url,
+    'callback': () => getMakes()
+  })
 }
 
 /**
@@ -161,18 +122,11 @@ export function getMakes() {
  */
 export function getMakerModels(makes_id) {
   const url = new URL(`/api/dictionaries/makes/${makes_id}/models`, baseURL);
-  return axios.get(url)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((e) => {
-      if (e.response.status === 503) {
-        return getMakerModels(makes_id);
-      } else if (e.response.status === 401) {
-        throw new Error('Unauthorized');
-      }
-      throw new Error(e.message);
-    });
+  return doAxiosRequest({
+    'method': 'GET',
+    'url': url,
+    'callback': () => getMakerModels(makes_id)
+  });
 }
 
 
@@ -181,16 +135,9 @@ export function getMakerModels(makes_id) {
  */
 export function getBodyTypes() {
   const url = new URL(`/api/dictionaries/body-types`, baseURL);
-  return axios.get(url)
-    .then((response) => {
-      return response.data;
-    })
-    .catch((e) => {
-      if (e.response.status === 503) {
-        return getBodyTypes();
-      } else if (e.response.status === 401) {
-        throw new Error('Unauthorized');
-      }
-      throw new Error(e.message);
-    });
+  return doAxiosRequest({
+    'method': 'GET',
+    'url': url,
+    'callback': () => getBodyTypes()
+  });
 }
