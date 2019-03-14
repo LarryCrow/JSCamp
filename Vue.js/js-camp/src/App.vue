@@ -24,3 +24,14 @@ export default {
 </script>
 
 <style src="@fortawesome/fontawesome-free/css/all.css"></style>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Fira+Sans');
+
+* {
+	margin: 0;
+	padding: 0;
+	font-family: 'Fira Sans', sans-serif;
+	box-sizing: border-box;
+	list-style: none;
+}
+</style>
