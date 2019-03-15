@@ -73,6 +73,7 @@ async function searchCars({
 		if (resultCars.results && resultCars.results.length > 0) {
 			this.cars = resultCars.results;
 			this.pageState.keyword = keyword;
+			this.selectedCarId = null;
 			updatePaginator.apply(this, [resultCars.pagination.current_page, resultCars.pagination.total_pages]);
 			return true;
 		}

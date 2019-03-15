@@ -4,10 +4,10 @@ import Vuex from 'vuex';
 import store from './store';
 
 Vue.use(Vuex);
-Vue.use(VueRouter)
-Vue.config.productionTip = false
+Vue.use(VueRouter);
+Vue.config.productionTip = false;
 
-import App from './App.vue'
+import App from './App.vue';
 import TableCars from './components/TableCars/TableCars.vue';
 import FormCars from './components/FormCars/FormCars.vue';
 import Auth from './components/Auth/Auth.vue';
