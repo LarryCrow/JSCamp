@@ -35,7 +35,7 @@
 	border: 1px solid darkgray;
 }
 
-.paginator {
+/* .paginator {
 	width: 15%;
 	align-self: center;
 }
@@ -71,7 +71,7 @@
 
 .selected-paginator-item {
 	background: rgb(151, 154, 255);
-}
+} */
 
 /* Table */
 .cars {

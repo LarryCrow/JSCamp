@@ -20,6 +20,7 @@ export default {
 			],
 			selectedCar: { id: '0', row: null },
 			pageState: { currentPage: null, totalPages: null, keyword: '', pages: [] },
+			paginator: { curPage: null, total: null },
 			sortingState: { sortField: '', orderType: '', sortCol: null },
 			tempKeyword: '',
 			errorModal: { isShow: false, message: '' }
@@ -31,7 +32,7 @@ export default {
 	methods: {
 		searchCars,
 		selectRow,
-		setPaginatatorValues,
+		updatePaginator,
 		switchPage,
 		sortCars,
 		deleteRow,
@@ -40,7 +41,7 @@ export default {
 		/**
 		 * Open the form page to add a new car.
 		 */
-		passToAddCar: function () { this.$router.push('form'); },
+		passToAddCar() { this.$router.push('form'); },
 	}
 }
 
@@ -72,7 +73,7 @@ async function searchCars({
 		if (resultCars.results && resultCars.results.length > 0) {
 			this.cars = resultCars.results;
 			this.pageState.keyword = keyword;
-			setPaginatatorValues.apply(this, [resultCars.pagination.current_page, resultCars.pagination.total_pages]);
+			updatePaginator.apply(this, [resultCars.pagination.current_page, resultCars.pagination.total_pages]);
 			return true;
 		}
 		throw new Error('No results. Please, change filters values');
@@ -105,22 +106,12 @@ function selectRow(event, car_id) {
 }
 
 /**
- * Changes text when switching buttons or hide depending on the number of pages.
+ * Update data which are used to send into paginator component
  * @param {string} curPage - A page which user has passed on.
  * @param {string} totalPages - An amount of pages.
  */
-function setPaginatatorValues(curPage, totalPages) {
-	if (totalPages === 1) {
-		this.pageState.pages = ['...', 1, '...'];
-	} else if (curPage === 1) {
-		this.pageState.pages = ['...', curPage, curPage + 1];
-	} else if (curPage === totalPages) {
-		this.pageState.pages = [curPage - 1, curPage, '...'];
-	} else {
-		this.pageState.pages = [curPage - 1, curPage, curPage + 1];
-	}
-	this.pageState.currentPage = curPage;
-	this.pageState.totalPages = totalPages;
+function updatePaginator(curPage, totalPages) {
+	this.paginator = {'curPage': curPage, 'total': totalPages};
 }
 
 /**
@@ -128,24 +119,8 @@ function setPaginatatorValues(curPage, totalPages) {
  *
  * @param {MouseEvent} event - Event received by clicking on the paginator.
  */
-function switchPage(event) {
-	const target = event.target.nodeName === 'I' ? event.target.parentElement : event.target;
-	let page;
-	if (!target.previousElementSibling) {
-		// to the first page
-		if (this.pageState.currentPage !== 1) page = 1;
-		else return;
-
-	} else if (!target.nextElementSibling) {
-		// to the last page
-		if (this.pageState.currentPage !== this.pageState.totalPages) page = this.pageState.totalPages;
-		else return;
-	} else {
-		page = parseInt(target.innerText, 10);
-		if (page === this.pageState.currentPage || !page) return;
-	}
-
-	searchCars.apply(this, [{ page: page }]);
+function switchPage(pageToMove) {
+	searchCars.apply(this, [{ page: pageToMove }]);
 }
 
 /**

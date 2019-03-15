@@ -13,9 +13,11 @@ import FormCars from './components/FormCars/FormCars.vue';
 import Auth from './components/Auth/Auth.vue';
 import ErrorModal from './utils/ErrorModal/ErrorModal.vue';
 import NotificationModal from './utils/NotificationModal/NotificationModal.vue';
+import Paginator from './components/Paginator/Paginator.vue';
 
 Vue.component('error-modal', ErrorModal);
 Vue.component('notif-modal', NotificationModal);
+Vue.component('paginator', Paginator);
 
 const routes = [
   { path: '/table', component: TableCars },

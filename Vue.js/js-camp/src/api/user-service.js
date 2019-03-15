@@ -13,6 +13,7 @@ export async function logIn(obj) {
 	return doAxiosRequest({
     'method': 'POST',
     'url': url,
+    'body': obj,
     'callback': () => logIn(obj)
   });
 }

@@ -1,13 +1,13 @@
 /**
  * @typedef {Object} Car
- * @property {string} formData.make_id - Car makers id.
- * @property {stirng} formData.car_model_id - Car models id.
- * @property {string} formData.body_type_id - Body type id.
- * @property {string} formData.year - Productions car year.
- * @property {string} formData.mileage - Car mileage
- * @property {string} formData.description - Car description
- * @property {string} formData.created_at - Date when car was added in database
- * @property {string} formData.updated_at - Date when car was updated in database
+ * @property {string} Car.make_id - Car makers id.
+ * @property {stirng} Car.car_model_id - Car models id.
+ * @property {string} Car.body_type_id - Body type id.
+ * @property {string} Car.year - Productions car year.
+ * @property {string} Car.mileage - Car mileage
+ * @property {string} Car.description - Car description
+ * @property {string} Car.created_at - Date when car was added in database
+ * @property {string} Car.updated_at - Date when car was updated in database
  */
 
 export * from './cars-service.js';
@@ -59,7 +59,7 @@ export function addCar(formData) {
     'method': 'POST',
     'url': url,
     'body': body,
-    'callback': () => addCar(form)
+    'callback': () => addCar(formData)
   });
 }
 

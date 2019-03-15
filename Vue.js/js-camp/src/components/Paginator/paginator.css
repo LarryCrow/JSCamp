@@ -1,0 +1,37 @@
+.paginator {
+	width: 15%;
+	align-self: center;
+}
+
+.paginator-list {
+	display: flex;
+	justify-content: space-around;
+	align-self: flex-end;
+	width: 100%;
+}
+
+.paginator-item {
+	border: 1px solid black;
+	height: 2em;
+	width: 2em;
+	text-align: center;
+	padding-top: 0.3rem;
+	cursor: pointer;
+}
+
+.paginator-item:not(.selected-paginator-item):not(.paginator-item-not-page):not(.disabled-button):hover {
+	background: rgba(151, 154, 255, 0.5);
+}
+
+.paginator-item.hidden{
+	display: none;
+}
+
+.paginator-item-not-page {
+	border: none;
+	cursor: default;
+}
+
+.selected-paginator-item {
+	background: rgb(151, 154, 255);
+}
