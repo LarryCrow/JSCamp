@@ -18,7 +18,7 @@ export default {
 				{ prop: 'created_at', title: 'Created at', style: 'width: 13%' },
 				{ prop: 'updated_at', title: 'Updatet at', style: 'width: 13%' }
 			],
-			selectedCar: { id: '0', row: null },
+			selectedCarId: null,
 			pageState: { currentPage: null, totalPages: null, keyword: '', pages: [] },
 			paginator: { curPage: null, total: null },
 			sortingState: { sortField: '', orderType: '', sortCol: null },
@@ -92,17 +92,12 @@ async function searchCars({
  * @param {MouseEvent} event - Event received by clicking on the table row.
  * @param {string} car_id - Car's id.
  */
-function selectRow(event, car_id) {
-	this.$store.test;
-	if (this.selectedCar.row !== null) {
-		this.selectedCar.row.classList.remove('selected-car');
-		if (this.selectedCar.id === car_id) {
-			this.selectedCar = { id: '', row: null }
-			return;
-		}
+function selectRow(car_id) {
+	if (this.selectedCarId === car_id) {
+		this.selectedCarId = null;
+	} else {
+		this.selectedCarId = car_id;
 	}
-	this.selectedCar = { id: car_id, row: event.currentTarget }
-	this.selectedCar.row.classList.add('selected-car');
 }
 
 /**
@@ -177,9 +172,9 @@ async function sortCars(event, fieldName, orderType) {
  * Delete selected row and update table.
  */
 async function deleteRow() {
-	if (this.selectedCar.row !== null) {
+	if (this.selectedCarId !== null) {
 		try {
-			await deleteCar(this.selectedCar.id);
+			await deleteCar(this.selectedCarId);
 			searchCars.apply(this);
 		} catch (ex) {
 			if (ex.message === 'Unauthorized') {
@@ -194,7 +189,7 @@ async function deleteRow() {
  * Open the form page to edit.
  */
 function passToEditCar() {
-	if (this.selectedCar.id) {
-		this.$router.push(`form/${this.selectedCar.id}`);
+	if (this.selectedCarId) {
+		this.$router.push(`form/${this.selectedCarId}`);
 	}
 }

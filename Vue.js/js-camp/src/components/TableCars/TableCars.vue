@@ -9,7 +9,7 @@
           <button
             class="icons edit"
             @click="passToEditCar"
-            :class="{ disabled: !selectedCar.row }"
+            :class="{ disabled: !selectedCarId }"
             type="button"
             title="Edit selected car"
           >
@@ -18,7 +18,7 @@
           <button
             class="icons delete"
             @click="deleteRow"
-            :class="{ disabled: !selectedCar.row }"
+            :class="{ disabled: !selectedCarId }"
             type="button"
             title="Delete selected car"
           >
@@ -63,7 +63,8 @@
             class="tb-row"
             v-for="car in cars"
             :key="car.id"
-            @click="selectRow($event, car.id)"
+            :class="{ 'selected-car': selectedCarId === car.id}"
+            @click="selectRow(car.id)"
           >
             <td class="td-truncated" :title="car.car_make.name">{{preventXSS(car.car_make.name)}}</td>
             <td class="td-truncated" :title="car.car_model.name">{{preventXSS(car.car_model.name)}}</td>
