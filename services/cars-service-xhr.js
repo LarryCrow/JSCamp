@@ -1,7 +1,9 @@
 export * from './cars-service-xhr.js';
-import { preventXSS, createURLParams, doXhrRequest } from '../utils/utilities.js';
+import { preventXSS, createURLParams, doXhrRequest, getToken } from '../utils/utilities.js';
+
 
 const baseURL = 'https://backend-jscamp.saritasa-hosting.com';
+const token = getToken();
 
 /**
  * Get cars from server by params.
@@ -13,7 +15,16 @@ const baseURL = 'https://backend-jscamp.saritasa-hosting.com';
 export function getCars(params) {
   const urlParams = createURLParams(params);
   const url = new URL(`/api/cars?${urlParams}`, baseURL);
-  return new Promise((res, rej) => doXhrRequest('GET', url, 200, res, rej))
+  return new Promise((res, rej) => {
+    doXhrRequest({
+      'reqMethod':'GET',
+      'url': url,
+      'successfulStatus': 200,
+      'resolve': res,
+      'reject': rej,
+      'token': token
+    })
+  })
     .then(response => {
       return JSON.parse(response);
     })
@@ -36,16 +47,26 @@ export function addCar(formData) {
   const url = new URL('/api/cars', baseURL);
 
   const object = {};
-    formData.forEach((value, key) => {
-      if (key !== 'description') {
-        object[key] = parseInt(value);
-      } else {
-        object[key] = preventXSS(value);
-      }
-    });
-    const json = JSON.stringify(object);
+  formData.forEach((value, key) => {
+    if (key !== 'description') {
+      object[key] = parseInt(value);
+    } else {
+      object[key] = preventXSS(value);
+    }
+  });
+  const json = JSON.stringify(object);
 
-  return new Promise((res, rej) => doXhrRequest('POST', url, 200, res, rej, json))
+  return new Promise((res, rej) => {
+    doXhrRequest({
+      'reqMethod':'POST',
+      'url': url,
+      'successfulStatus': 200,
+      'resolve': res,
+      'reject': rej,
+      'token': token,
+      'json': json
+    })
+  })
     .then(response => {
       return JSON.parse(response);
     })
@@ -77,7 +98,17 @@ export function editCar(formData, id) {
   });
   const json = JSON.stringify(object);
   
-  return new Promise((res, rej) => doXhrRequest('PUT', url, 200, res, rej, json))
+  return new Promise((res, rej) => {
+    doXhrRequest({
+    'reqMethod':'PUT',
+    'url': url,
+    'successfulStatus': 200,
+    'resolve': res,
+    'reject': rej,
+    'token': token,
+    'json': json
+    })
+  })
     .then(response => {
       return JSON.parse(response);
     })
@@ -98,7 +129,16 @@ export function editCar(formData, id) {
  */
 export function deleteCar(id) {
   const url = new URL(`/api/cars/${id}`, baseURL);
-  return new Promise((res, rej) => doXhrRequest('DELETE', url, 204, res, rej))
+  return new Promise((res, rej) => {
+    doXhrRequest({
+      'reqMethod':'DELETE',
+      'url': url,
+      'successfulStatus': 204,
+      'resolve': res,
+      'reject': rej,
+      'token': token
+    })
+  })
     .then(response => {
       return 'Successful';
     })
@@ -119,7 +159,16 @@ export function deleteCar(id) {
  */
 export function getCar(id) {
   const url = new URL(`/api/cars/${id}`, baseURL);
-  return new Promise((res, rej) => doXhrRequest('GET', url, 200, res, rej))
+  return new Promise((res, rej) => {
+    doXhrRequest({
+      'reqMethod':'GET',
+      'url': url,
+      'successfulStatus': 200,
+      'resolve': res,
+      'reject': rej,
+      'token': token
+    })
+  })
     .then(response => {
       return JSON.parse(response);
     })
@@ -137,7 +186,15 @@ export function getCar(id) {
  */
 export function getMakes() {
   const url = new URL(`/api/dictionaries/makes`, baseURL);
-  return new Promise((res, rej) => doXhrRequest('GET', url, 200, res, rej))
+  return new Promise((res, rej) => {
+    doXhrRequest({
+      'reqMethod':'GET',
+      'url': url,
+      'successfulStatus': 200,
+      'resolve': res,
+      'reject': rej
+    })
+  })
     .then(response => {
       return JSON.parse(response);
     })
@@ -156,7 +213,15 @@ export function getMakes() {
  */
 export function getMakerModels(makes_id) {
   const url = new URL(`/api/dictionaries/makes/${makes_id}/models`, baseURL);
-  return new Promise((res, rej) => doXhrRequest('GET', url, 200, res, rej))
+  return new Promise((res, rej) => {
+    doXhrRequest({
+      'reqMethod':'GET',
+      'url': url,
+      'successfulStatus': 200,
+      'resolve': res,
+      'reject': rej
+    })
+  })
     .then(response => {
       return JSON.parse(response);
     })
@@ -174,7 +239,15 @@ export function getMakerModels(makes_id) {
  */
 export function getBodyTypes() {
   const url = new URL(`/api/dictionaries/body-types`, baseURL);
-  return new Promise((res, rej) => doXhrRequest('GET', url, 200, res, rej))
+  return new Promise((res, rej) => {
+    doXhrRequest({
+      'reqMethod':'GET',
+      'url': url,
+      'successfulStatus': 200,
+      'resolve': res,
+      'reject': rej
+    })
+  })
     .then(response => {
       return JSON.parse(response);
     })
@@ -183,5 +256,36 @@ export function getBodyTypes() {
         return getBodyTypes();
       }
       throw new Error('Some error');
+    });
+}
+
+export function logIn(formData) {
+  const url = new URL(`/api/auth`, baseURL);
+
+  const object = {};
+  formData.forEach((value, key) => {
+    object[key] = value;
+  });
+  const json = JSON.stringify(object);
+
+  return new Promise((res, rej) => {
+    doXhrRequest({
+      'reqMethod': 'POST',
+      'url': url,
+      'successfulStatus': 200,
+      'resolve': res,
+      'reject': rej,
+      'json': json
+    })
+  })
+    .then(response => {
+      return JSON.parse(response);
+    })
+    .catch(error => {
+      if (error.status === 503) {
+        return logIn(formData);
+      } else {
+        throw new Error('Can\'t authorize');
+      }
     });
 }

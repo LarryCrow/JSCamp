@@ -17,7 +17,7 @@
 .table-wrapper {
   width: 90%;
   margin: auto;
-  min-width: 1230px;
+  min-width: 1265px;
 }
 
 /* Table options*/
@@ -166,8 +166,15 @@ th {
 }
 
 .sort-icons i {
+  font-size: 1.1rem;
   padding: 0 0.2rem;
   cursor: pointer;
+}
+
+.sort-icons button {
+  display: inline;
+  background: none;
+  border: none;
 }
 
 .selected-sort {

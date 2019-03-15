@@ -114,14 +114,10 @@ export function preventXSS(str) {
 /**
  * Do request with specified params
  * 
- * @param {String} reqMethod 
- * @param {String} url 
- * @param {Number} successfulStatus 
- * @param {Function} resolve 
- * @param {Function} reject 
- * @param {Object} json
+ * @param {Object} param0 reqMethod - Request method, url - URL, successfulStatus - the status at which call resolve method
+ * resolve - callback after getting data, reject - callback after getting error, json - body of request
  */
-export function doXhrRequest(reqMethod, url, successfulStatus, resolve, reject, json) {
+export function doXhrRequest({reqMethod, url, successfulStatus, resolve, reject, json}) {
   const xhr = new XMLHttpRequest();
 
   xhr.onload = xhr.onerror = function () {
@@ -134,9 +130,44 @@ export function doXhrRequest(reqMethod, url, successfulStatus, resolve, reject, 
 
   xhr.open(reqMethod, url);
   if (reqMethod === 'POST' || reqMethod === 'PUT') {
-    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader('Content-Type', 'application/json');
   }
+  xhr.setRequestHeader('Authorization', getToken());
   xhr.send(json);
+}
+
+/**
+ * Do fetch request with specified params
+ * @param {Object} param0 reqMethod - Request method, url - URL, json - body of request
+ * @returns {Promise} Promise for handling
+ */
+export function doFetchRequest({reqMethod, url, json}) {
+  const option = {
+    'method': reqMethod,
+		'headers': {
+      'Content-type': 'application/json',
+      'Authorization': `Bearer${getToken()}`
+    }
+  }
+  if (json) {
+    option['body'] = json;
+  }
+  return fetch(url, option);
+}
+
+/**
+ * Check is token exist
+ * @returns {String} Recieved token
+ */
+export function getToken() {
+  const token = window.localStorage.getItem('token');
+  if (!token) {
+    if (document.URL !==  'http://127.0.0.1:5500/auth-page/auth.html') {
+      document.location.href = '../auth-page/auth.html';
+    }
+  } else {
+    return token;
+  }
 }
 
 /**

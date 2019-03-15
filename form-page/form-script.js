@@ -1,7 +1,9 @@
-import { getCar, editCar, getMakerModels, getMakes, getBodyTypes, addCar } from "../services/cars-service-xhr.js";
-import { showErrorModal, showNotification, preventXSS } from "../utils/utilities.js";
+import { getCar, editCar, getMakerModels, getMakes, getBodyTypes, addCar } from "../services/cars-service-fetch.js";
+import { showErrorModal, showNotification, preventXSS, getToken } from "../utils/utilities.js";
+
 
 let CAR_ID;
+let TOKEN;
 
 
 /**
@@ -140,6 +142,6 @@ function initEventListener() {
   inMileage.max = Math.pow(2,32) - 1;
 }
 
-
+TOKEN = getToken();
 initEventListener();
 initializeSelectLists();
